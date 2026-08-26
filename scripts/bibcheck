@@ -1,0 +1,77 @@
+#!/usr/bin/env python3
+"""bibcheck — 驗證 .bib 檔每條 DOI 是否真實存在且指向該論文。
+
+用法:  bibcheck refs.bib
+       pbpaste | bibcheck -        # 直接驗剪貼簿裡的 BibTeX
+
+逐條打 https://doi.org（CSL-JSON content negotiation）：
+  OK        DOI 存在且回傳標題與 bib 標題吻合
+  MISMATCH  DOI 存在但指向別的論文（附上實際指向的標題）
+  DEAD      DOI 不存在（404）
+規則：任何 AI 生成的書目，進 Zotero 前先過這關。
+"""
+import sys, re, json, ssl, time, unicodedata
+import urllib.request, urllib.parse
+
+
+def norm(s):
+    s = unicodedata.normalize("NFKD", s)
+    s = re.sub(r"<[^>]+>", "", s)              # <scp> 之類的標籤
+    s = re.sub(r"[^a-z0-9 ]", " ", s.lower())  # 連字符/標點差異
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def resolve(doi, ctx):
+    url = "https://doi.org/" + urllib.parse.quote(doi, safe="/")
+    req = urllib.request.Request(url, headers={
+        "Accept": "application/vnd.citationstyles.csl+json",
+        "User-Agent": "bibcheck/1.0"})
+    with urllib.request.urlopen(req, timeout=25, context=ctx) as r:
+        return json.loads(r.read().decode())
+
+
+def main():
+    if len(sys.argv) != 2:
+        print(__doc__); sys.exit(1)
+    text = sys.stdin.read() if sys.argv[1] == "-" else open(sys.argv[1], encoding="utf-8").read()
+    entries = re.findall(r"@\w+\{([^,]+),(.*?)\n\}", text, re.S)
+    if not entries:
+        print("找不到任何 BibTeX entry"); sys.exit(1)
+    ctx = ssl.create_default_context()
+    ok = mism = dead = nodoi = 0
+    for key, body in entries:
+        key = key.strip()
+        mdoi = re.search(r"doi\s*=\s*[{\"]([^}\"]+)[}\"]", body)
+        mtitle = re.search(r"title\s*=\s*[{\"](.+?)[}\"],?\s*\n", body, re.S)
+        title = re.sub(r"[{}\n]", " ", mtitle.group(1)).strip() if mtitle else ""
+        if not mdoi:
+            nodoi += 1
+            print(f"NO-DOI    {key}")
+            continue
+        doi = mdoi.group(1).strip()
+        try:
+            d = resolve(doi, ctx)
+            rtitle = d.get("title") or ""
+            a, b = norm(title), norm(rtitle)
+            good = a[:40] in b or b[:40] in a if a and b else False
+            if good:
+                ok += 1
+                print(f"OK        {key}")
+            else:
+                mism += 1
+                print(f"MISMATCH  {key}: DOI 實際指向 -> {rtitle[:70]}")
+        except urllib.error.HTTPError as e:
+            dead += 1
+            print(f"DEAD      {key}: {doi}  (HTTP {e.code})")
+        except Exception as e:
+            print(f"ERROR     {key}: {type(e).__name__} {e}")
+        time.sleep(0.4)
+    total = len(entries)
+    print(f"\n{total} entries: {ok} OK, {mism} MISMATCH, {dead} DEAD, {nodoi} no-DOI")
+    if mism or dead:
+        print("⚠️  有 MISMATCH/DEAD：不要匯入 Zotero，先逐條查證。")
+        sys.exit(2)
+
+
+if __name__ == "__main__":
+    main()
