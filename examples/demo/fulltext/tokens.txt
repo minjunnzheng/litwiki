@@ -1,0 +1,5 @@
+Synthetic teaching document; not a research paper.
+[[p.1]]
+The blue sample card is 8 mm long at room temperature.
+[[p.2]]
+No measurement of the red sample card is provided.

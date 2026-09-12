@@ -51,10 +51,7 @@ exactly the citekey named in the prompt.
 
 ## Driver
 
-Do not assemble CLI flags yourself; they go stale. Use the runners in
-`scripts/`. Model split: see WORKFLOW §A-4.
-
-```bash
-bash scripts/grok_one.sh <citekey>      # default
-bash scripts/codex_one.sh <citekey>     # hard paper
-```
+Follow WORKFLOW §A-4. The current session handles ingestion unless the user
+explicitly delegates this task. Only then use the selected runner in `scripts/`.
+Capture and recheck the exact source version per `meta/QUALITY.md`. Finishing
+step 7 means digested, not integrated; leave completion receipts to the caller.

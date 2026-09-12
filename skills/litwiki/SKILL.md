@@ -35,7 +35,8 @@ Follow `meta/AI-GUIDE.md` §4 and `meta/WORKFLOW.md`. Use the schemas in
 `meta/SCHEMA.md`, tags from `meta/VOCAB.md`, run `python3 scripts/validate.py`
 from the vault root, and fix every error before finishing. New-paper
 ingestion goes through `meta/EXTRACTION-PROMPT.md` plus INTEGRATE
-(WORKFLOW §A-5). Bibliography must pass `scripts/bibcheck` before it
+(WORKFLOW §A-5). Source versions, integration receipts and human evaluations follow
+`meta/QUALITY.md`; model selection follows WORKFLOW §A-4. Bibliography must pass `scripts/bibcheck` before it
 enters any trusted store. After any write, append one line to
 `meta/log.md`. Never edit `meta/INSTRUCTIONS.md` without an approved
 diff. "跑 litwiki lint" → `meta/LINT.md`.
@@ -49,7 +50,7 @@ an applying rollback without explicit user approval.
 - **Querying**: open the vault and say "follow `meta/AI-GUIDE.md` exactly,
   then answer: <question>". `CLAUDE.md` / `AGENTS.md` in the vault root
   load that instruction when the session is rooted there.
-- **Ingesting via a CLI agent**: `bash scripts/codex_one.sh <citekey>`
-  (enforces `meta/CODEX-TASK.md`).
+- **Ingesting**: follow WORKFLOW §A; select an external CLI runner only when
+  the user delegates this task (the runner enforces `meta/CODEX-TASK.md`).
 
 The single source of truth is always `meta/AI-GUIDE.md`.

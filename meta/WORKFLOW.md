@@ -16,22 +16,13 @@ description: Standard operating procedures — adding a new paper, caching verif
    python3 scripts/zotero_map.py --citekey <新citekey>   # 找 PDF、更新對照
    bash scripts/extract_fulltext.sh <新citekey>          # 產 fulltext/<citekey>.txt
    ```
-4. 叫 AI 消化（模型可換，程序不可換）：
-
-   | 走哪條 | 指令 | 用在 |
-   |---|---|---|
-   | **預設** | `bash scripts/grok_one.sh <citekey>` | 一般論文（grok-4.6） |
-   | 難篇 | `bash scripts/codex_one.sh <citekey>` | OCR 差、圖說與正文互相矛盾、引用標籤混亂的老論文（gpt-5.6-sol） |
-   | Claude | > 依照 `meta/EXTRACTION-PROMPT.md` 消化 `<citekey>`。 | 手邊已開 session 時 |
-
-   兩支腳本內部都強制走 `meta/CODEX-TASK.md`。品質由架構保證：EXTRACTION-PROMPT
-   定程序、SCHEMA 定格式、validate.py 硬驗證，所以換模型讀，成品仍是同一規格。
-   絕不讓 AI「自由發揮」讀論文。
-   （消化 agent 只寫 `lit/`+`claims/`——平行安全；回寫既有頁面是下一步的事。）
-
-   **注意：Codex 若載入了「寫入信任庫前先跨模型審查」之類的全域規則，會為每篇
-   多開一輪審查。** `codex_one.sh` 的 prompt 已明寫此步不需送審；批次跑之前
-   別把那句拿掉。
+4. **由目前 session 消化；只有使用者當次明確指定，才委派其他模型。**
+   不得把一次指定當成固定分工。依 `meta/EXTRACTION-PROMPT.md` 與
+   `meta/SCHEMA.md` 執行；指定 Grok 或 Codex 時，可使用對應的
+   `scripts/grok_one.sh` / `scripts/codex_one.sh`。Runner 只做到消化，
+   後續仍須 INTEGRATE、來源核對與驗證。
+   開始前依 `meta/QUALITY.md` 擷取來源 SHA-256；消化後確認來源未變。
+   外部 agent 的規格見 `meta/CODEX-TASK.md`，驗證責任仍在呼叫端。
 5. **INTEGRATE 回寫**（消化完成後，由主 session 依消化回傳的 JSON 執行；
    這步讓既有頁面「知道」新論文存在，缺了它庫會單向生長）：
    1. `_catalog.md` 加一行（表頭論文數 +1）。
@@ -55,7 +46,9 @@ description: Standard operating procedures — adding a new paper, caching verif
         --approved-plan-sha256 <inspect 輸出的 hash>
       python3 scripts/validate.py
       ```
-      只有 `validate.py` 0 errors 才完成。若驗證失敗，先跑只讀的
+      依 `meta/QUALITY.md` 將 integration receipt 與來源版本紀錄納入同批 transaction。
+      `python3 -B scripts/health.py status` 可查未完成與過期紀錄。
+      只有 `validate.py` 0 errors，且已完成逐項 INTEGRATE 核對，才完成。若驗證失敗，先跑只讀的
       `transaction.py rollback <operation_id>` 看完整計畫；套用 rollback 前依
       `TRANSACTIONS.md` 列出所有絕對路徑並取得使用者明確同意。
 6. obsidian-git 自動 commit（或手動 commit）。
@@ -126,3 +119,8 @@ qa 語意過期抽查），產出 `meta/lint-reports/YYYY-MM-DD.md`。**它只�
 的基準），**由你擁有**。開新研究線（例如新造山帶）、或 lint 提醒範圍外論文
 成群時，AI 只能**提出修改草案（diff）給你確認**，確認後代筆寫入並更新
 `updated:` 日期＋log 一行 `SCHEMA ...`。AI 不得未經確認修改此檔。
+
+## H. 來源版本、待整合與人工評測
+
+操作方式及欄位唯一規格見 `meta/QUALITY.md`。`digested` 不代表整合完成，
+AI 核對過的 QA 不得直接升格為人工標準答案。

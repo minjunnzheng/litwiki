@@ -43,8 +43,9 @@ Given a user question:
 ```
 grep -ril "<2-3 keywords>" qa/
 ```
-If a qa note matches the question closely, use it verbatim (it is verified).
-Cite it plus the sources it lists.
+If a qa note matches closely, check `verified_by` and recheck its source pages.
+`pending` is not verified; model-reviewed QA is not human ground truth. Treat the
+note as a navigation aid until its answer and source version have been checked.
 
 **Step 2 — locate the paper(s).** Do NOT read `_catalog.md` whole. Use the
 local BM25 index instead:
@@ -55,7 +56,7 @@ python3 scripts/search.py --kind catalog "<author year or topic>" --top 5
 Each hit gives `path §section` + a snippet; open only the hits. The index
 rebuilds itself when any indexed file changes (cache in `.cache/`, gitignored).
 It indexes `_catalog.md` rows, `lit/` per `##` section, `claims/`, `concepts/`,
-`qa/`, `mocs/` — NOT `fulltext/` (use Step 5) and NOT `data/`. Accents are
+`qa/`, `mocs/` — NOT `fulltext/` in the default mode (use Step 5), and NOT `data/`. Accents are
 folded (décollement = decollement); 中文 also works. If the user names an
 author/year (e.g. "Smith 2020"), `--kind catalog` matches the citekey
 directly (citekeys look like `smith2020...`, lowercase author + year).
@@ -99,7 +100,43 @@ and read ONLY the matched pages (never the whole book). If the user confirms
 a fact you retrieved this way, save it as a claim (`clm-<citekey>-NN`) so
 the next lookup is free.
 
-**Step 5 — full text.** Only if steps 1–4 fail or you must verify a quote:
+**Step 5 — full text.** Only if steps 1–4 fail or you must verify a quote.
+Search original pages with a separate BM25 index:
+```
+python3 scripts/search.py --kind fulltext "<English keywords or sample ID>"
+python3 scripts/search.py --kind fulltext --citekey <citekey> --json "<keywords>"
+```
+This opt-in mode leaves the curated search ranking unchanged. It indexes each
+complete page under its existing `[[p.N]]` marker and returns the source key,
+nullable citekey, page, absolute source path, source line and a query-centered
+raw preview.
+Page numbers are extraction markers, not inferred printed page numbers.
+Files without markers, or with malformed/duplicate markers, are skipped with
+warnings on stderr; they remain available to direct grep. Skipped files mean
+incomplete coverage, not absence of evidence. `data/` remains excluded.
+
+Merged aliases use the catalog's explicit mapping: when canonical fulltext
+exists, it takes priority over alias versions, including versions with different
+pagination. `--citekey` accepts either spelling. If only an alias file exists,
+`canonical_citekey` is advisory: `citekey` is null and `page_scope` is
+`source-file-only`. Unregistered supplements/backlog files also have a null
+`citekey` and source-file-only pages. `registered` checks the actual source stem
+against catalog table keys plus lit-note names; it does not mean verified.
+Never remove a supplement suffix or combine an advisory canonical key with an
+alias page. For null-citekey hits, report the actual file path and its marker;
+do not generate a `[[citekey]] p.N` citation from that hit. Verify and resolve
+source/version identity before using it as a literature citation.
+
+The preview is **unverified original text**, not a validated claim. Read the
+source around the reported line and confirm wording, value, unit and conditions
+before citing it. Scores are keyword relevance, not confidence; a hit is not
+proof and no hits do not establish that the library lacks the answer. This
+mode does not translate: try English keywords and spelling variants for English
+papers, even when the question is Chinese. The first call builds the separate
+`.cache/search-fulltext-index.json`; later calls rebuild after source changes.
+Run `python3 scripts/search.py --self-test` for an isolated page-search check.
+
+Keep exact grep for number/phrase verification and for unindexed text:
 ```
 grep -in -C2 "<exact phrase or number>" fulltext/<citekey>.txt
 ```

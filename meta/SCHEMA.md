@@ -184,6 +184,14 @@ sources: [tan2024mountain]
 （完整答案，含 [[citekey]] p.X 引用）
 ```
 
+## Independent operational and review records
+
+`status: digested` does not assert completed integration. See `QUALITY.md` for
+`source-versions.json`, `integration.json` and human-evaluation records. A claim's
+`supported`/`contested`/`refuted` status does not identify its reviewer. Never set
+`verified_by: user` merely by filling the QA template; record who actually checked
+it, or leave `pending`. Pending QA must not be reused as a verified answer.
+
 ## Global rules
 
 - Wiki-links between notes always use `[[target]]` (no path, no .md).

@@ -1,0 +1,66 @@
+{
+  "schema": "litwiki.human-eval.v1",
+  "cases": [
+    {
+      "review": {
+        "status": "pending",
+        "reviewer_kind": "",
+        "reviewer": "",
+        "reviewed_at": ""
+      },
+      "id": "card",
+      "question": "How long is the blue sample card at room temperature?",
+      "kind": "answerable",
+      "expected_answer": "8 mm at room temperature.",
+      "evidence": [
+        {
+          "citekey": "tokens",
+          "page": 1,
+          "quote": "The blue sample card is 8 mm long at room temperature.",
+          "source_sha256": "480818c08622214e061519794d79e5a9b9935577560cac382e0198d6bbf1a2c9"
+        }
+      ]
+    },
+    {
+      "review": {
+        "status": "pending",
+        "reviewer_kind": "",
+        "reviewer": "",
+        "reviewed_at": ""
+      },
+      "id": "conditions",
+      "question": "Why do the blue sample card lengths differ?",
+      "kind": "conflict",
+      "expected_answer": "8 mm at room temperature; 9 mm after heating. The conditions differ.",
+      "evidence": [
+        {
+          "citekey": "tokens",
+          "page": 1,
+          "quote": "The blue sample card is 8 mm long at room temperature.",
+          "source_sha256": "480818c08622214e061519794d79e5a9b9935577560cac382e0198d6bbf1a2c9"
+        },
+        {
+          "citekey": "alternate",
+          "page": 1,
+          "quote": "The blue sample card is 9 mm long after heating.",
+          "source_sha256": "a359dd955e62e92cea816b979e21954aa9630db4e44c1c99df3bbe001890e670"
+        }
+      ]
+    },
+    {
+      "review": {
+        "status": "pending",
+        "reviewer_kind": "",
+        "reviewer": "",
+        "reviewed_at": ""
+      },
+      "id": "absent",
+      "question": "What is the red sample card mass?",
+      "kind": "not-in-kb",
+      "expected_answer": "Not in knowledge base.",
+      "evidence": [],
+      "corpus_sha256": "",
+      "absence_review": ""
+    }
+  ]
+}

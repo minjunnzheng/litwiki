@@ -2,7 +2,7 @@
 type: qa
 id: qa-<nnn>
 question: ""
-verified_by: user
+verified_by: pending
 date:
 sources: []
 ---

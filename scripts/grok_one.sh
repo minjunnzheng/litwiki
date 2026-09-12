@@ -1,6 +1,6 @@
 #!/bin/bash
 # Digest ONE paper via Grok CLI. Usage: grok_one.sh <citekey> [model]
-# Default digestion route for routine papers (see WORKFLOW §A-4).
+# Use only when Grok was selected for this task (WORKFLOW §A-4).
 #
 # Flags note: --permission-mode acceptEdits makes grok silently do nothing;
 # use --always-approve. grok has no global rules file, so everything it needs

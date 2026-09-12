@@ -1,8 +1,8 @@
 #!/bin/bash
-# batch_digest.sh <worklist.txt> [parallel] [runner]
+# batch_digest.sh <worklist.txt> <parallel> <runner>
 #   worklist = one citekey per line (blank lines / # comments ignored)
-#   parallel = concurrent agents, default 4
-#   runner   = scripts/grok_one.sh (default) or scripts/codex_one.sh
+#   parallel = required positive concurrency limit
+#   runner   = required explicit runner selected for this task
 #
 # Already-digested papers (meta/digest-reports/<ck>.json exists) are skipped,
 # so the batch is resumable: re-run the same command after an interruption.
@@ -11,9 +11,18 @@
 # NOT done here — run it once after the whole batch, per WORKFLOW §A-5.
 set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+if [ "$#" -ne 3 ]; then
+  echo "Usage: batch_digest.sh <worklist.txt> <parallel> <explicit-runner>" >&2
+  exit 2
+fi
 list="$1"
-par="${2:-4}"
-runner="${3:-$ROOT/scripts/grok_one.sh}"
+par="$2"
+runner="$3"
+[[ "$par" =~ ^[1-9][0-9]*$ ]] || { echo "parallel must be a positive integer" >&2; exit 2; }
+[ -f "$list" ] && [ -f "$runner" ] || { echo "missing worklist or runner" >&2; exit 2; }
+list="$(cd "$(dirname "$list")" && pwd)/$(basename "$list")"
+runner="$(cd "$(dirname "$runner")" && pwd)/$(basename "$runner")"
+
 cd "$ROOT" || exit 1
 mkdir -p meta/codex-logs
 

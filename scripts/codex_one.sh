@@ -1,7 +1,7 @@
 #!/bin/bash
 # Digest ONE paper via Codex CLI. Usage: codex_one.sh <citekey> [model]
-# Model default gpt-5.6-sol; use it for the hard papers (bad OCR, captions that
-# contradict the body). Routine papers go to grok_one.sh — see WORKFLOW §A-4.
+# Use only when Codex was selected for this task (WORKFLOW §A-4).
+# Model default gpt-5.6-sol applies only after that explicit selection.
 #
 # Flags note (codex-cli 0.147.0): --full-auto was removed, and --sandbox is
 # mutually exclusive with --approve-for-me (which already implies

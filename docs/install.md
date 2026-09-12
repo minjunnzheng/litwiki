@@ -39,9 +39,8 @@ cp -R skills/litwiki ~/.agents/skills/
 export LITWIKI_ROOT=/path/to/litwiki
 ```
 
-Codex ignores a *file-level* symlink of `SKILL.md` (the skill vanishes
-with no error). A directory symlink whose target contains a real
-`SKILL.md` is fine.
+The examples copy complete skill directories. If an entry already exists, inspect
+it before copying; consult your agent’s current discovery rules for symlinks.
 
 ## Obsidian (optional)
 

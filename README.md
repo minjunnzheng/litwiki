@@ -12,15 +12,16 @@ and fill it.
 
 ---
 
-## Install (about 5 minutes)
+## Install
 
 ```bash
 git clone https://github.com/minjunnzheng/litwiki.git
 cd litwiki
-python3 scripts/validate.py          # 0 notes, 0 errors
+python3 -B scripts/validate.py          # 0 notes, 0 errors; unused tags are expected
+python3 -B scripts/demo.py              # synthetic end-to-end example, no model needed
 ```
 
-Needs: `python3`, `pdftotext` (poppler) for PDF extraction, and optionally
+Needs: Python 3.10+, `pdftotext` (poppler) for PDF extraction, and optionally
 Zotero + Better BibTeX. Claude Code / Codex / Grok all work: root a session
 in this directory and `CLAUDE.md` / `AGENTS.md` load the answering protocol.
 
@@ -48,16 +49,36 @@ still finds the vault.
 python3 scripts/zotero_map.py --citekey <citekey>
 bash scripts/extract_fulltext.sh <citekey>
 
-# then digest (pick one runner):
-bash scripts/grok_one.sh <citekey>           # default
-bash scripts/codex_one.sh <citekey>          # hard papers (bad OCR, contradictory captions)
-# or tell Claude: 依照 meta/EXTRACTION-PROMPT.md 消化 <citekey>
+# Ask the current session: 依照 meta/EXTRACTION-PROMPT.md 消化 <citekey>
+# Select an external runner only if you explicitly delegate this task.
+# See WORKFLOW §A-4.
 ```
 
 5. INTEGRATE the new paper into `_catalog.md`, `concepts/`, `mocs/`, and
    backlinks — WORKFLOW §A-5. Multi-file writes go through
    `scripts/transaction.py` (preview, then apply). See `meta/TRANSACTIONS.md`.
-6. `python3 scripts/validate.py` must exit 0.
+6. Record the source version and integration checks per `meta/QUALITY.md`.
+   `digested` is not `integrated`. Run `health.py status` and `validate.py`.
+
+## Source drift, pending integration and evaluation
+
+```bash
+python3 -B scripts/health.py status
+python3 -B scripts/health.py baseline --output /path/outside/vault/source-versions.json
+python3 -B scripts/eval_human.py --draft-qa --output /path/outside/vault/cases.json
+python3 -B scripts/eval_human.py --cases /path/outside/vault/cases.json
+```
+
+[QUALITY.md](meta/QUALITY.md) defines source snapshots, completion receipts and
+human review. The first snapshot records today's files, not an old digest's
+provenance. Legacy integration without receipts is `unrecorded`; known unfinished
+work stays `pending`. All exported QA cases await human approval. No approval
+means no human-grounded score. Literal quote checks and semantic grading are
+reported separately.
+
+[The synthetic example](examples/demo/README.md) runs in temporary storage.
+[Upgrade and release instructions](docs/upgrading.md) explain private copies,
+common rule updates and the public-file allowlist. Version: v0.1.0 candidate.
 
 ## What is in here
 
@@ -73,7 +94,10 @@ bash scripts/codex_one.sh <citekey>          # hard papers (bad OCR, contradicto
 | `meta/TRANSACTIONS.md` | Preview / apply / rollback for multi-file writes |
 | `meta/LINT.md` | Periodic semantic health check (diagnoses only) |
 | `scripts/validate.py` | Schema, broken links, page anchors, catalog sync |
-| `scripts/search.py` | Local BM25 over catalog / lit / claims / concepts / qa |
+| `scripts/search.py` | Curated BM25 and opt-in original-page search (`--kind fulltext`) |
+| `scripts/health.py` | Source/PDF hashes and integration queue |
+| `scripts/eval_human.py` | Human approval, evidence and answer evaluation |
+| `scripts/eval_retrieval.py` | Legacy QA retrieval regression; AI labels remain AI labels |
 | `scripts/transaction.py` | Atomic multi-file apply + crash recovery |
 | `scripts/extract_fulltext.sh` | PDF → `fulltext/<citekey>.txt` with `[[p.N]]` markers |
 | `scripts/zotero_map.py` | Citekey ↔ PDF ↔ metadata from Zotero |
@@ -105,14 +129,14 @@ The highest-leverage edits after cloning:
 
 ## Privacy
 
-This public repo contains **no papers**. Once you ingest PDFs, `fulltext/` is
+This workflow package contains **no papers**; teaching examples are synthetic. Once you ingest PDFs, `fulltext/` is
 extracted copyrighted text. Keep *your* clone private. Do not open a PR that
 adds `fulltext/` or `lit/` notes.
 
 ## Known limits
 
 - `scripts/*.sh` are bash; `pdftotext` is required for extraction.
-- Codex does not follow a file-level symlink of `SKILL.md`. `install` copies real files.
+- The install examples copy a skill directory. Check your agent’s current discovery rules if using symlinks.
 - `validate.py` warnings (unused VOCAB tags, empty vault) are expected on a fresh clone. Errors are not.
 - A glossary of translations, if you keep one, is yours to point at from `INSTRUCTIONS.md`. This package does not ship one.
 
