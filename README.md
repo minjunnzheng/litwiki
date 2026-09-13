@@ -1,5 +1,7 @@
 # litwiki
 
+[![Litwiki workflow: papers become page-marked text, linked notes and source-health records; real questions lead to checked source pages and cited answers.](docs/overview.svg)](docs/overview.svg)
+
 A literature knowledge base that an AI can actually be held to.
 
 One paper = one note. Every fact carries a page citation. If the vault

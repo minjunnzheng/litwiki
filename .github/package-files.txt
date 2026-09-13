@@ -11,6 +11,7 @@ claims/.gitkeep
 concepts/.gitkeep
 data/.gitkeep
 docs/install.md
+docs/overview.svg
 docs/upgrading.md
 examples/demo/README.md
 examples/demo/_catalog.md
