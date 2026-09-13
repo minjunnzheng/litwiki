@@ -51,6 +51,6 @@ an applying rollback without explicit user approval.
   then answer: <question>". `CLAUDE.md` / `AGENTS.md` in the vault root
   load that instruction when the session is rooted there.
 - **Ingesting**: follow WORKFLOW §A; select an external CLI runner only when
-  the user delegates this task (the runner enforces `meta/CODEX-TASK.md`).
+  the user delegates this task (the runner enforces `meta/AGENT-TASK.md`).
 
 The single source of truth is always `meta/AI-GUIDE.md`.

@@ -93,7 +93,7 @@ def main():
                 err(f, f"type '{fm.get('type')}' != folder type '{t}'")
     for extra in ("AI-GUIDE", "SCHEMA", "VOCAB", "WORKFLOW", "TRANSACTIONS", "HOME",
                   "_catalog", "EXTRACTION-PROMPT", "LINT", "INSTRUCTIONS",
-                  "log", "CODEX-TASK", "TO-FIND"):
+                  "log", "AGENT-TASK", "TO-FIND"):
         notes[extra] = extra
 
     claim_ids = {}

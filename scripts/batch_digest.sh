@@ -5,7 +5,7 @@
 #   runner   = required explicit runner selected for this task
 #
 # The explicit worklist determines scope; old report files do not prove completion.
-# Digest agents draft per-paper replacements outside the vault (CODEX-TASK).
+# Digest agents draft per-paper replacements outside the vault (AGENT-TASK).
 # The caller verifies and applies them, then completes WORKFLOW §A-5 INTEGRATE.
 # Do not automatically retry the whole list; inspect outputs and select unfinished keys.
 set -u
@@ -23,7 +23,7 @@ list="$(cd "$(dirname "$list")" && pwd)/$(basename "$list")"
 runner="$(cd "$(dirname "$runner")" && pwd)/$(basename "$runner")"
 
 cd "$ROOT" || exit 1
-mkdir -p meta/codex-logs
+mkdir -p meta/agent-logs
 
 todo=()
 while read -r ck; do
@@ -53,7 +53,7 @@ import json, os, glob, sys
 root = sys.argv[1]
 tot = cost = out = 0
 n = 0
-for f in glob.glob(os.path.join(root, "meta/codex-logs/*.json")):
+for f in glob.glob(os.path.join(root, "meta/agent-logs/*.json")):
     try:
         d = json.load(open(f))
         u = d.get("usage") or {}

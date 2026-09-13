@@ -102,7 +102,7 @@ common rule updates and the public-file allowlist. Version: v0.1.0 candidate.
 | `meta/VOCAB.md` | Controlled tags. Rewrite for your field. |
 | `meta/INSTRUCTIONS.md` | Owner's priorities. You own this file; the AI may only propose diffs. |
 | `meta/EXTRACTION-PROMPT.md` | The digest prompt. Quality is held here, not by the model. |
-| `meta/CODEX-TASK.md` | Hand-off kit for an external CLI agent |
+| `meta/AGENT-TASK.md` | Hand-off kit for an external CLI agent |
 | `meta/WORKFLOW.md` | Day-to-day SOP: ingest, qa cache, Zotero, lint |
 | `meta/TRANSACTIONS.md` | Preview / apply / rollback for multi-file writes |
 | `meta/LINT.md` | Periodic semantic health check (diagnoses only) |

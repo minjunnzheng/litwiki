@@ -13,5 +13,5 @@ scripts/__pycache__/
 .DS_Store
 
 # digest agent stdout/stderr (local only)
-meta/codex-logs/*
-!meta/codex-logs/README.md
+meta/agent-logs/*
+!meta/agent-logs/README.md

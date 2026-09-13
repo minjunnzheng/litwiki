@@ -29,7 +29,7 @@ examples/demo/qa/qa-demo.md
 fulltext/.gitkeep
 lit/.gitkeep
 meta/AI-GUIDE.md
-meta/CODEX-TASK.md
+meta/AGENT-TASK.md
 meta/CONCEPT-TASK.md
 meta/EXTRACTION-PROMPT.md
 meta/INSTRUCTIONS.md
@@ -40,7 +40,7 @@ meta/TO-FIND.md
 meta/TRANSACTIONS.md
 meta/VOCAB.md
 meta/WORKFLOW.md
-meta/codex-logs/README.md
+meta/agent-logs/README.md
 meta/digest-reports/.gitkeep
 meta/integration.json
 meta/library.bib

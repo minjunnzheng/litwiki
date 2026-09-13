@@ -22,7 +22,7 @@ description: Standard operating procedures — adding a new paper, caching verif
    `scripts/grok_one.sh` / `scripts/codex_one.sh`。Runner 只做到消化，
    後續仍須 INTEGRATE、來源核對與驗證。
    開始前依 `meta/QUALITY.md` 擷取來源 SHA-256；消化後確認來源未變。
-   外部 agent 的規格見 `meta/CODEX-TASK.md`，驗證責任仍在呼叫端。
+   外部 agent 的規格見 `meta/AGENT-TASK.md`，驗證責任仍在呼叫端。
 5. **INTEGRATE 回寫**（消化完成後，由主 session 依消化回傳的 JSON 執行；
    這步讓既有頁面「知道」新論文存在，缺了它庫會單向生長）：
    1. `_catalog.md` 加一行（表頭論文數 +1）。

@@ -1,4 +1,4 @@
-# CODEX-TASK — digest one paper (hand-off kit)
+# AGENT-TASK — digest one paper (hand-off kit)
 
 Task for an external coding agent (Codex, Grok, or similar). Work inside
 the vault root (the directory that contains `meta/AI-GUIDE.md`). Process

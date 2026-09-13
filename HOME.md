@@ -48,5 +48,5 @@ vault root for source/integration status; see [[QUALITY]] for the definitions.
 - [[log]] — append-only event log
 - [[TO-FIND]] — gap list
 - [[EXTRACTION-PROMPT]] — the only ingest prompt
-- [[CODEX-TASK]] — hand-off for an external CLI agent
+- [[AGENT-TASK]] — hand-off for an external CLI agent
 - [[LINT]] — periodic semantic check; reports land in `meta/lint-reports/`

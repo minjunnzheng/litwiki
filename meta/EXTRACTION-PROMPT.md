@@ -84,7 +84,7 @@ session scratch outside the vault, as required by `meta/TRANSACTIONS.md`.
   silently.
 - If the fulltext is corrupt/truncated, extract what you can and report it
   in `problems`.
-- Per-paper content targets are `lit/` and `claims/`; CODEX-TASK may additionally
+- Per-paper content targets are `lit/` and `claims/`; AGENT-TASK may additionally
   request a digest report. Draft all replacements outside the vault. Do not
   directly write canonical files or apply unreviewed scientific content. Hand
   draft paths and source checks to the calling session for independent
