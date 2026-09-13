@@ -60,21 +60,25 @@ bash scripts/extract_fulltext.sh <citekey>
 6. Record the source version and integration checks per `meta/QUALITY.md`.
    `digested` is not `integrated`. Run `health.py status` and `validate.py`.
 
-## Source drift, pending integration and evaluation
+## Source drift, pending integration and content checks
 
 ```bash
 python3 -B scripts/health.py status
 python3 -B scripts/health.py baseline --output /path/outside/vault/source-versions.json
-python3 -B scripts/eval_human.py --draft-qa --output /path/outside/vault/cases.json
-python3 -B scripts/eval_human.py --cases /path/outside/vault/cases.json
 ```
 
 [QUALITY.md](meta/QUALITY.md) defines source snapshots, completion receipts and
-human review. The first snapshot records today's files, not an old digest's
-provenance. Legacy integration without receipts is `unrecorded`; known unfinished
-work stays `pending`. All exported QA cases await human approval. No approval
-means no human-grounded score. Literal quote checks and semantic grading are
-reported separately.
+routine content checks. Verify the source passages, values, units, conditions
+and locations used in a note or real answer. The first snapshot records today's
+files, not an old digest's provenance. Legacy integration without receipts is
+`unrecorded`; known unfinished integration stays `pending`.
+
+Ordinary ingestion and use require no fixed question set, one-question-per-paper
+exercise or human answer scoring. Saved QA is an optional cache for real queries.
+Tool evaluation is optional and runs only when explicitly requested; see QUALITY
+for `eval_human.py`. Ungraded case drafts are not integration debt. If human
+scoring is requested, actual human approval is still required before reporting
+human-grounded scores; literal checks remain separate from semantic grading.
 
 [The synthetic example](examples/demo/README.md) runs in temporary storage.
 [Upgrade and release instructions](docs/upgrading.md) explain private copies,
@@ -96,7 +100,7 @@ common rule updates and the public-file allowlist. Version: v0.1.0 candidate.
 | `scripts/validate.py` | Schema, broken links, page anchors, catalog sync |
 | `scripts/search.py` | Curated BM25 and opt-in original-page search (`--kind fulltext`) |
 | `scripts/health.py` | Source/PDF hashes and integration queue |
-| `scripts/eval_human.py` | Human approval, evidence and answer evaluation |
+| `scripts/eval_human.py` | Optional, explicitly requested human-scored tool evaluation |
 | `scripts/eval_retrieval.py` | Legacy QA retrieval regression; AI labels remain AI labels |
 | `scripts/transaction.py` | Atomic multi-file apply + crash recovery |
 | `scripts/extract_fulltext.sh` | PDF → `fulltext/<citekey>.txt` with `[[p.N]]` markers |

@@ -13,3 +13,4 @@ Format: `YYYY-MM-DD  KIND  one line`. KIND is `INGEST` / `INTEGRATE` /
 
 2026-09-12  SCHEMA     Template candidate: explicit per-task model selection, page search, source/integration records, human-evaluation gates, synthetic demo, package CI and upgrade instructions. Personal papers and review data remain outside this package.
 2026-09-13  SCHEMA     Clarified evidence-based grading in QUALITY: preserve competing interpretations, distinguish scope differences and citation errors, and bind case-specific criteria in review_notes; AI-GUIDE links to the rubric. No scientific claims, QA answers or human grades changed.
+2026-09-13  SCHEMA     Routine ingestion and queries use source/content checks without fixed question sets or human-scoring gates. QA remains an optional cache; tool evaluation requires an explicit request, and ungraded drafts are not integration debt.

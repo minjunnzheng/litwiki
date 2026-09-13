@@ -6,7 +6,7 @@ description: Standard operating procedures — adding a new paper, caching verif
 
 # WORKFLOW — 日常維護 SOP
 
-## A. 新論文入庫（每篇 ~5 分鐘人工 + 一次 AI 消化）
+## A. 新論文入庫
 
 1. 論文照常進 Zotero（拖 PDF / 瀏覽器外掛）。
 2. `meta/library.bib` 是 Better BibTeX auto-export（Keep updated），會自動
@@ -29,11 +29,12 @@ description: Standard operating procedures — adding a new paper, caching verif
    2. `concept_candidates` 併入 `concepts/`；新論文有提供數值的既有 concept，
       把值補進其 Typical values 表（附 [[citekey]] 或 claim 連結）。
    3. 加進相關 `mocs/`（一句話導讀）。
-   4. **反向連結**：依新 lit 筆記的 `## Relevance`，打開被連到的 3–5 篇既有
-      `lit/` 筆記，在各自 `## Relevance` 加一行
-      `[[新citekey]] — <延伸/反駁/使用了它的什麼>`。
-   5. **qa 影響檢查**：`grep -ril "<相關關鍵詞>" qa/`，新論文推翻或明顯補充
-      某 qa 的答案 → 修正或刪除該 qa（修正後仍須符合 tpl-qa）。
+   4. **反向連結**：依新 lit 筆記的 `## Relevance`，核對確實相關的既有
+      `lit/` 筆記，在其 `## Relevance` 補上有來源支持的關係；
+      不設篇數配額，無適用項目時依 QUALITY 記錄原因。
+   5. **既有答案影響檢查**：搜尋 `qa/` 的相關關鍵詞與來源，核對新論文是否
+      補充或改變答案的適用範圍。依證據修正或標記待重查；方法或觀點不同時
+      並列各方，不直接視為推翻。這一步不要求新增問答或人工評分。
    6. **把完整變更做成 transaction**：所有目標檔先寫到 vault 外的 session
       scratch；`meta/log.md` 的 `INGEST`／`INTEGRATE` 行也放進同一批 replacement。
       Spec 格式與安全契約見 `meta/TRANSACTIONS.md`。正式 vault 不可逐檔直接改。
@@ -70,12 +71,15 @@ description: Standard operating procedures — adding a new paper, caching verif
 
 成本：建檔每本 ~1–2 萬 token；之後每次查閱 ~2–4 千。
 
-## B. qa/ 快取（讓知識庫越用越聰明）
+## B. qa/ 快取（按需保存實際問答）
 
-任何 AI 回答被你確認正確且日後可能再問，就叫它：
+日常提問後，若你要求保留可重用的答案，就叫 AI：
 > 把剛才這個問答依 `tpl-qa` 存進 `qa/`。
-弱 AI 之後會最先命中這裡（路由 Step 1）。答案後來被推翻就直接刪檔或修正。
-新增/修正/刪除 qa 後在 `meta/log.md` 追加一行 `QA ...`。
+
+依 AI-GUIDE 核對原文、頁碼及條件，`verified_by` 記實際核對者；AI 核對不能
+標成人工成績。再次使用時仍要核對來源，跨文獻答案也要注意新增文獻及問題範圍。
+快取不是測驗題庫；入庫不要求建立 QA，也不要求你逐篇答題或打分。
+新增或修正 QA 後在 `meta/log.md` 追加一行 `QA ...`。
 
 ## C. 驗證
 
@@ -120,7 +124,10 @@ qa 語意過期抽查），產出 `meta/lint-reports/YYYY-MM-DD.md`。**它只�
 成群時，AI 只能**提出修改草案（diff）給你確認**，確認後代筆寫入並更新
 `updated:` 日期＋log 一行 `SCHEMA ...`。AI 不得未經確認修改此檔。
 
-## H. 來源版本、待整合與人工評測
+## H. 來源版本、待整合與內容核對
 
-操作方式及欄位唯一規格見 `meta/QUALITY.md`。`digested` 不代表整合完成，
-AI 核對過的 QA 不得直接升格為人工標準答案。
+操作方式及欄位唯一規格見 `meta/QUALITY.md`。日常檢查集中在實際寫入或引用的
+內容、來源版本及整合紀錄；`digested` 不代表整合完成。執行
+`python3 -B scripts/health.py status` 查看即時清單。
+固定人工問答評分已取消，不列為待辦或入庫門檻；只有你明確要求測試工具時，
+才使用 QUALITY 的選用評測流程。未評分的草稿不算欠帳，也不冒充人工驗收。

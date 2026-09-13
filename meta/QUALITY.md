@@ -1,8 +1,31 @@
-# Source versions, integration receipts, and human evaluation
+# Source versions, content checks, and optional evaluation
 
 These checks answer different questions. `lit.status` describes digestion;
 `claim.status` describes support/conflict; neither proves integration or human
 verification. Run `python3 -B scripts/health.py status` to see operational status.
+
+## Routine source and content checks
+
+Ordinary ingestion and use do not require a fixed question set, one question per
+paper, or human answer scoring. Do not create evaluation cases or treat an
+ungraded set as integration debt unless the user explicitly requests evaluation.
+
+- During ingestion or correction, verify each substantive statement being written
+  against its source passage: attribution, value, unit, conditions and page.
+  Preserve differing interpretations with their methods and scope; a citation
+  label alone does not show that the passage supports the statement.
+- During a real query, return the supporting source location and relevant
+  conditions. Recheck cached evidence and relevant additions for cross-paper
+  answers. State unresolved source or coverage limits instead of claiming that
+  every paper has been checked.
+- Use validation and source hashes for structural/file checks. They do not prove
+  semantic correctness. If extraction or PDF/page identity is uncertain, inspect
+  the original and flag the specific unresolved item; do not invent a match or
+  require the user to grade unrelated questions.
+
+Use the existing note, source-version, integration and log records for actual
+fixes. Optional evaluation below tests the retrieval/answering tool; it is not an
+ingestion gate or proof that every source is correct.
 
 ## Source versions
 
@@ -23,7 +46,8 @@ transaction. The command preserves other source records when a citekey is given.
 Omit `--citekey` only when deliberately establishing a baseline for all files.
 After digesting, recheck that the source still matches the captured hash. Never
 refresh a changed baseline just to clear a warning: first recheck affected notes,
-citations, and evaluation cases. Prior versions remain in Git history.
+citations, and any evaluation cases that are actually in use. Prior versions
+remain in Git history.
 
 ## Integration completion
 
@@ -70,7 +94,11 @@ apply everything through `transaction.py`. A receipt records the operator's work
 not automatic scientific approval. Pending records can instead contain
 `status: pending`, per-check reasons, and an `evidence` pointer to the observed debt.
 
-## Human-reviewed question set
+## Optional human-reviewed question set
+
+Run this only when the user explicitly requests a human-scored tool evaluation.
+No fixed case count or completion score is required for routine library use.
+Existing ungraded cases are optional drafts, not a standing task.
 
 Keep private evaluation JSON outside the public workflow repo. Draft from existing
 QA without promoting its verification labels:

@@ -39,7 +39,9 @@ All paths below are relative to that directory.
 
 ## 1. Routing algorithm (follow in order, stop at first hit)
 
-Given a user question:
+Given an actual user question, follow the steps below. Do not generate a fixed
+question set or require human scores as part of routine use or ingestion; see
+[QUALITY.md](QUALITY.md#routine-source-and-content-checks).
 
 **Step 1 — cached answers.** Search `qa/`:
 ```
@@ -48,6 +50,9 @@ grep -ril "<2-3 keywords>" qa/
 If a qa note matches closely, check `verified_by` and recheck its source pages.
 `pending` is not verified; model-reviewed QA is not human ground truth. Treat the
 note as a navigation aid until its answer and source version have been checked.
+For cross-literature questions, also check relevant additions and the question
+scope before reusing the answer; matching an old QA does not establish complete
+coverage. This is source checking for the real query, not an extra grading task.
 
 **Step 2 — locate the paper(s).** Do NOT read `_catalog.md` whole. Use the
 local BM25 index instead:

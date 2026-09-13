@@ -35,6 +35,10 @@ Useful shapes:
 Save a good answer with "store this Q&A as tpl-qa in qa/". New papers go
 through [[WORKFLOW]] §A.
 
+Routine use needs source passages, page locations and conditions, not a fixed
+question set or human grading. Run `python3 -B scripts/health.py status` from the
+vault root for source/integration status; see [[QUALITY]] for the definitions.
+
 ## Index
 
 - [[_catalog]] — one line per paper
