@@ -38,17 +38,18 @@ both. Without them, enter a verified PDF/metadata entry in `meta/map.json`
 all work: root a session in this directory and `CLAUDE.md` / `AGENTS.md`
 load the answering protocol.
 
-To invoke the skill from other projects:
+To invoke the skill from other projects, run these commands from the repo root:
 
 ```bash
+mkdir -p ~/.claude/skills ~/.codex/skills ~/.agents/skills
 cp -R skills/litwiki ~/.claude/skills/     # Claude Code
 cp -R skills/litwiki ~/.codex/skills/      # Codex (real files, not a file-symlink)
 cp -R skills/litwiki ~/.agents/skills/     # Grok / Agent Skills
-export LITWIKI_ROOT="$PWD"                 # add to ~/.zshrc
+export LITWIKI_ROOT="$PWD"                 # current session, from repo root
 ```
 
-Put `LITWIKI_ROOT` on PATH-adjacent config so a session started elsewhere
-still finds the vault.
+For sessions started elsewhere, add `export LITWIKI_ROOT=/absolute/path/to/litwiki`
+to your shell profile (for example, `~/.zshrc`).
 
 ## First paper
 
@@ -56,8 +57,9 @@ still finds the vault.
 2. Edit `meta/VOCAB.md` — the starter vocabulary is orogeny / thermochronology; replace it if your field is different. Notes may only use tags listed there.
 3. Put the PDF in Zotero or another folder and choose a stable citekey.
 4. Prepare `meta/map.json`: with Zotero + Better BibTeX, run
-   `python3 scripts/zotero_map.py --citekey <citekey>`; without Zotero,
-   [enter the PDF and verified metadata manually](docs/install.md#without-zotero).
+   `python3 scripts/zotero_map.py --citekey <citekey>` (rebuilds the whole map);
+   without Zotero, [enter the PDF and verified metadata manually](docs/install.md#without-zotero).
+   Do not run `zotero_map.py` after adding manual entries.
    Then, from the vault root:
 
 ```bash
@@ -147,9 +149,12 @@ The highest-leverage edits after cloning:
 
 ## Privacy
 
-This workflow package contains **no papers**; teaching examples are synthetic. Once you ingest PDFs, `fulltext/` is
-extracted copyrighted text. Keep *your* clone private. Do not open a PR that
-adds `fulltext/` or `lit/` notes.
+This workflow package contains **no papers**; teaching examples are synthetic.
+A populated vault can expose copyrighted text, annotations, local PDF paths,
+bibliography and research notes. Keep your populated copy private. Do not
+push it to a public remote or open a PR containing its data, including PDFs,
+`fulltext/`, `lit/`, `claims/`, `qa/`, `meta/map.json`, `meta/library.bib`,
+or a populated `_catalog.md`.
 
 ## Known limits
 

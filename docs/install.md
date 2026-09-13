@@ -62,6 +62,7 @@ after adding manual entries: it rebuilds `meta/map.json` from the Zotero export.
 ## Agent skills
 
 ```bash
+mkdir -p ~/.claude/skills ~/.codex/skills ~/.agents/skills
 cp -R skills/litwiki ~/.claude/skills/
 cp -R skills/litwiki ~/.codex/skills/    # directory of real files
 cp -R skills/litwiki ~/.agents/skills/

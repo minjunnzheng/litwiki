@@ -11,20 +11,15 @@ Outputs:
 
 Usage:
   python3 scripts/zotero_map.py            # full rebuild
-  python3 scripts/zotero_map.py --citekey X  # report one entry (after rebuild)
+  python3 scripts/zotero_map.py --citekey X  # full rebuild, then print one entry
+
+Both commands replace meta/map.json; do not mix with manual entries.
 """
-import json, os, re, shutil, sqlite3, sys, tempfile
+import argparse, json, os, re, shutil, sqlite3, sys, tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-def _pick_bib():
-    p = os.path.join(ROOT, "meta", "library.bib")
-    if not os.path.exists(p):
-        raise SystemExit("no bibliography found (expected meta/library.bib)")
-    return p
-
-
-BIB = _pick_bib()
+BIB = os.path.join(ROOT, "meta", "library.bib")
 MAP = os.path.join(ROOT, "meta", "map.json")
 CATALOG = os.path.join(ROOT, "_catalog.md")
 ZOTERO_DB = os.path.expanduser("~/Zotero/zotero.sqlite")
@@ -131,9 +126,14 @@ def load_zotero():
             con.close()
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--citekey", help="print this entry after rebuilding the whole map")
+    args = parser.parse_args()
+    if args.citekey == "":
+        parser.error("--citekey requires a non-empty value")
     if not os.path.exists(BIB):
         sys.exit(f"ERROR: {BIB} not found. Set up the Better BibTeX "
-                 "auto-export first (see meta/WORKFLOW.md D).")
+                 "auto-export first (see docs/install.md).")
     entries = parse_bib(BIB)
     zot = load_zotero()
     mapping, missing_pdf = {}, []
@@ -176,9 +176,8 @@ def main():
     else:
         print("_catalog.md exists — not overwritten")
 
-    if "--citekey" in sys.argv:
-        ck = sys.argv[sys.argv.index("--citekey") + 1]
-        print(json.dumps(mapping.get(ck, "NOT FOUND"),
+    if args.citekey is not None:
+        print(json.dumps(mapping.get(args.citekey, "NOT FOUND"),
                          ensure_ascii=False, indent=2))
 
 
