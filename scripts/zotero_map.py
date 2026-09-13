@@ -92,38 +92,43 @@ def storage_key(pdf_path):
 def load_zotero():
     """Read-only copy -> {attachmentStorageKey: {'itemKey':parentKey,
     'annotations':[{'page','text','comment','color'}]}}"""
-    tmp = os.path.join(tempfile.gettempdir(), "litwiki_zotero.sqlite")
-    shutil.copy(ZOTERO_DB, tmp)
-    for suffix in ("-wal", "-shm", "-journal"):
-        src = ZOTERO_DB + suffix
-        if os.path.exists(src):
-            shutil.copy(src, tmp + suffix)
-    con = sqlite3.connect(tmp)
-    cur = con.cursor()
-    out = {}
-    # attachment storage key -> parent item key
-    for att_id, att_key, parent_key in cur.execute("""
-        SELECT ia.itemID, i.key, pi.key
-        FROM itemAttachments ia
-        JOIN items i  ON ia.itemID = i.itemID
-        LEFT JOIN items pi ON ia.parentItemID = pi.itemID
-        WHERE ia.contentType='application/pdf'"""):
-        out[att_key] = {"attachmentID": att_id, "itemKey": parent_key,
-                        "annotations": []}
-    by_att_id = {v["attachmentID"]: v for v in out.values()}
-    try:
-        for parent_att, text, comment, page, color in cur.execute("""
-            SELECT parentItemID, text, comment, pageLabel, color
-            FROM itemAnnotations"""):
-            if parent_att in by_att_id:
-                by_att_id[parent_att]["annotations"].append(
-                    {"page": page, "text": text or "", "comment": comment or "",
-                     "color": color or ""})
-    except sqlite3.OperationalError:
-        print("WARN: itemAnnotations table not found; skipping annotations")
-    con.close()
-    return out
-
+    if not os.path.isfile(ZOTERO_DB):
+        raise SystemExit(f"Zotero database not found: {ZOTERO_DB}. "
+                         "For a PDF without Zotero, see docs/install.md.")
+    with tempfile.TemporaryDirectory(prefix="litwiki-zotero-") as tmpdir:
+        tmp = os.path.join(tmpdir, "zotero.sqlite")
+        shutil.copy(ZOTERO_DB, tmp)
+        for suffix in ("-wal", "-shm", "-journal"):
+            src = ZOTERO_DB + suffix
+            if os.path.exists(src):
+                shutil.copy(src, tmp + suffix)
+        con = sqlite3.connect(tmp)
+        try:
+            cur = con.cursor()
+            out = {}
+            # attachment storage key -> parent item key
+            for att_id, att_key, parent_key in cur.execute("""
+                SELECT ia.itemID, i.key, pi.key
+                FROM itemAttachments ia
+                JOIN items i  ON ia.itemID = i.itemID
+                LEFT JOIN items pi ON ia.parentItemID = pi.itemID
+                WHERE ia.contentType='application/pdf'"""):
+                out[att_key] = {"attachmentID": att_id, "itemKey": parent_key,
+                                "annotations": []}
+            by_att_id = {v["attachmentID"]: v for v in out.values()}
+            try:
+                for parent_att, text, comment, page, color in cur.execute("""
+                    SELECT parentItemID, text, comment, pageLabel, color
+                    FROM itemAnnotations"""):
+                    if parent_att in by_att_id:
+                        by_att_id[parent_att]["annotations"].append(
+                            {"page": page, "text": text or "", "comment": comment or "",
+                             "color": color or ""})
+            except sqlite3.OperationalError:
+                print("WARN: itemAnnotations table not found; skipping annotations")
+            return out
+        finally:
+            con.close()
 
 def main():
     if not os.path.exists(BIB):

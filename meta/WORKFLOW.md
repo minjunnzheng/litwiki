@@ -8,14 +8,14 @@ description: Standard operating procedures — adding a new paper, caching verif
 
 ## A. 新論文入庫
 
-1. 論文照常進 Zotero（拖 PDF / 瀏覽器外掛）。
-2. `meta/library.bib` 是 Better BibTeX auto-export（Keep updated），會自動
-   更新，citekey 以它為準。
-3. 在終端機（litwiki/ 目錄下）跑：
-   ```bash
-   python3 scripts/zotero_map.py --citekey <新citekey>   # 找 PDF、更新對照
-   bash scripts/extract_fulltext.sh <新citekey>          # 產 fulltext/<citekey>.txt
-   ```
+1. 把 PDF 放進 Zotero 或自己的資料夾，選定固定 citekey。
+2. 使用 Zotero + Better BibTeX 時，將 `meta/library.bib` 設為 Keep updated，
+   以匯出的 citekey 為準；不用 Zotero 時，依 `docs/install.md` 的
+   Without Zotero 段落，在 `meta/map.json` 手動填入核對過的書目與 PDF 路徑。
+3. 在終端機（litwiki/ 目錄下），Zotero 路線先跑
+   `python3 scripts/zotero_map.py --citekey <新citekey>`；手動路線略過此指令。
+   兩者接著都跑 `bash scripts/extract_fulltext.sh <新citekey>`，產生
+   `fulltext/<citekey>.txt`。
 4. **由目前 session 消化；只有使用者當次明確指定，才委派其他模型。**
    不得把一次指定當成固定分工。依 `meta/EXTRACTION-PROMPT.md` 與
    `meta/SCHEMA.md` 執行；指定 Grok 或 Codex 時，可使用對應的
@@ -59,8 +59,8 @@ description: Standard operating procedures — adding a new paper, caching verif
 教科書全文消化＝數十萬 token 燒在讀入，且產出形狀不對（書是按章查閱的）。
 改走輕量流程：
 
-1. PDF 照常進 Zotero（book 條目，pin citekey）——同 A-1〜A-3
-   （zotero_map ＋ extract_fulltext；fulltext 全量抽取免費）。
+1. PDF 依 A-1〜A-3 建檔（Zotero 或手動 `map.json`）；
+   `fulltext/` 照常全量抽取。
 2. AI **只讀目錄頁**（約 8–12 頁），寫 `lit/<citekey>.md`：
    `status: reference`，段落只要 `## TL;DR`（這是什麼書、對本庫用途）＋
    `## Chapter map`（章名 → 頁碼範圍 → 一句話涵蓋什麼）。
@@ -106,7 +106,8 @@ python3 scripts/validate.py          # schema、斷鏈、頁碼錨點、孤兒 c
 ## E. 批次重跑（架構升級時）
 
 SCHEMA/EXTRACTION-PROMPT 若大改版，舊筆記不必手改：對目標 citekey 重跑
-A-4（消化步驟）即可覆寫。`fulltext/` 與 `library.bib` 是不變的原料層。
+A-4（消化步驟）即可覆寫。PDF、`fulltext/` 與已核對的 `meta/map.json`
+書目資料是來源層；使用 Zotero 的庫另有 `meta/library.bib` 匯出。
 
 ## F. 語意 lint（定期健檢；手動觸發）
 

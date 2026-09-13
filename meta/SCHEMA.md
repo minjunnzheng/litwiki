@@ -14,18 +14,18 @@ Enforced by `scripts/validate.py`. Templates live in `meta/templates/`.
 
 ## 1. `lit` — literature note (one per paper) — `lit/<citekey>.md`
 
-Filename = Better BibTeX citekey, exactly as in `meta/library.bib`.
+Filename = stable citekey; if using Better BibTeX, it must match the key in `meta/library.bib`.
 
 ```yaml
 ---
 type: lit
-citekey: smith2020example            # = filename, = BibTeX key
+citekey: smith2020example            # = filename; also BibTeX key when used
 title: "..."
 authors: [Smith A., ...]             # "Last F." form, full list
 year: 2020
 journal: "..."
 doi: 10.xxxx/xxxx
-zotero: zotero://select/library/items/<ITEMKEY>
+zotero: zotero://select/library/items/<ITEMKEY>  # leave empty without Zotero
 pdf: ~/Zotero/storage/<KEY>/paper.pdf   # or any absolute path to the PDF
 fulltext: fulltext/smith2020example.txt
 topics: [orogeny]                              # from meta/VOCAB.md only

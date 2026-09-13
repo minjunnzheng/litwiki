@@ -9,7 +9,7 @@ MAP="$ROOT/meta/map.json"
 OUT="$ROOT/fulltext"
 mkdir -p "$OUT"
 command -v pdftotext >/dev/null || { echo "ERROR: pdftotext not found (brew install poppler)"; exit 1; }
-[ -f "$MAP" ] || { echo "ERROR: $MAP missing — run scripts/zotero_map.py first"; exit 1; }
+[ -f "$MAP" ] || { echo "ERROR: $MAP missing — create it (docs/install.md) or run scripts/zotero_map.py"; exit 1; }
 
 python3 - "$MAP" "${1:-}" <<'EOF' | while IFS=$'\t' read -r key pdf; do
 import json, sys

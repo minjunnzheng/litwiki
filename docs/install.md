@@ -14,7 +14,8 @@ python3 scripts/validate.py
 ```
 
 Optional: Zotero + the Better BibTeX plugin, auto-exporting My Library as
-Better BibLaTeX to `meta/library.bib` (Keep updated). Citation key formula
+Better BibLaTeX to `meta/library.bib` (Keep updated). The automated
+`zotero_map.py` command requires both. Citation key formula
 `auth.lower + year` matches the filename convention. Pin keys of papers
 already in the vault.
 
@@ -30,6 +31,34 @@ python3 scripts/validate.py
 
 All commands in this repo assume a Unix shell inside WSL, not PowerShell.
 
+## Without Zotero
+
+Create a private vault from this template before adding real sources. Choose a
+stable citekey and add an entry to `meta/map.json` without removing existing
+entries. Copy the title, authors, year, journal and DOI from the source or a
+verified bibliography; leave `doi` empty if none is available. Use the PDF's
+absolute path and an empty annotation list:
+
+```json
+{
+  "paperkey": {
+    "title": "<verified title>",
+    "authors": "<verified authors>",
+    "year": "<YYYY>",
+    "journal": "<verified journal>",
+    "doi": "",
+    "pdf": "/absolute/path/to/paper.pdf",
+    "itemKey": "",
+    "annotations": []
+  }
+}
+```
+
+Replace `paperkey` and the placeholders, then run
+`bash scripts/extract_fulltext.sh paperkey`. Use that same citekey for
+`fulltext/paperkey.txt` and `lit/paperkey.md`. Do not run `zotero_map.py`
+after adding manual entries: it rebuilds `meta/map.json` from the Zotero export.
+
 ## Agent skills
 
 ```bash
@@ -44,6 +73,6 @@ it before copying; consult your agent’s current discovery rules for symlinks.
 
 ## Obsidian (optional)
 
-Open this folder as a vault. Dataview queries in `HOME.md` need the
-Dataview plugin. Zotero Integration can use `meta/zotero-import.md` as
-the import format, with note path `lit/`.
+Open this folder as a vault. `HOME.md` links to the catalog, topic maps
+and workflow rules. Zotero Integration, if used, can load
+`meta/zotero-import.md` as the import format, with note path `lit/`.

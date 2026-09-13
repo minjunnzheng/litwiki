@@ -9,7 +9,8 @@ exactly the citekey named in the prompt.
 1. Read `meta/EXTRACTION-PROMPT.md` and `meta/SCHEMA.md` — follow them
    exactly. Allowed tags: `meta/VOCAB.md`. Owner priorities:
    `meta/INSTRUCTIONS.md`.
-2. Get metadata from `meta/map.json` (built by `scripts/zotero_map.py`):
+2. Get metadata from `meta/map.json` (built by `scripts/zotero_map.py`
+   or entered manually as described in `docs/install.md`):
    ```bash
    python3 -c "import json;print(json.dumps(json.load(open('meta/map.json'))['<CITEKEY>'],ensure_ascii=False)[:24000])"
    ```

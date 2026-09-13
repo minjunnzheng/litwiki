@@ -19,7 +19,7 @@ session scratch outside the vault, as required by `meta/TRANSACTIONS.md`.
 
 **Inputs**
 - citekey: `{{citekey}}`
-- metadata (from library.bib): `{{title / authors / year / journal / doi}}`
+- verified metadata (from `meta/map.json`): `{{title / authors / year / journal / doi}}`
 - full text: `fulltext/{{citekey}}.txt` (contains `[[p.N]]` page markers)
 - PDF (for figures, only if needed): `{{pdf_path}}`
 - Zotero annotations (may be empty): `{{annotations}}`

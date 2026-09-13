@@ -9,8 +9,9 @@ does not contain the answer, the reply is exactly `Not in knowledge base.`
 — never filled from training memory.
 
 This repository is the **workflow**: schemas, prompts, scripts, and an
-empty vault. It ships no papers. You clone it, point it at your own PDFs,
-and fill it.
+empty vault. It ships no papers. Before adding your own PDFs or notes, use
+GitHub **Use this template → Private** (or point your clone at your own
+private remote). Keep populated vaults separate from this public template.
 
 Open the plain-Markdown vault in **Obsidian** to browse and edit linked notes.
 To use AI for ingestion, upkeep, or questions, start **Claude Code, Codex,
@@ -30,9 +31,12 @@ python3 -B scripts/validate.py          # 0 notes, 0 errors; unused tags are exp
 python3 -B scripts/demo.py              # synthetic end-to-end example, no model needed
 ```
 
-Needs: Python 3.10+, `pdftotext` (poppler) for PDF extraction, and optionally
-Zotero + Better BibTeX. Claude Code / Codex / Grok all work: root a session
-in this directory and `CLAUDE.md` / `AGENTS.md` load the answering protocol.
+Needs: Python 3.10+ and `pdftotext` (poppler) for PDF extraction. Zotero +
+Better BibTeX are optional; the automated `zotero_map.py` command requires
+both. Without them, enter a verified PDF/metadata entry in `meta/map.json`
+([manual setup](docs/install.md#without-zotero)). Claude Code / Codex / Grok
+all work: root a session in this directory and `CLAUDE.md` / `AGENTS.md`
+load the answering protocol.
 
 To invoke the skill from other projects:
 
@@ -50,12 +54,13 @@ still finds the vault.
 
 1. Edit `meta/INSTRUCTIONS.md` — who the vault is for, which topics to extract densely.
 2. Edit `meta/VOCAB.md` — the starter vocabulary is orogeny / thermochronology; replace it if your field is different. Notes may only use tags listed there.
-3. Drop the PDF into Zotero (or any folder) and record the citekey.
-4. From the vault root:
+3. Put the PDF in Zotero or another folder and choose a stable citekey.
+4. Prepare `meta/map.json`: with Zotero + Better BibTeX, run
+   `python3 scripts/zotero_map.py --citekey <citekey>`; without Zotero,
+   [enter the PDF and verified metadata manually](docs/install.md#without-zotero).
+   Then, from the vault root:
 
 ```bash
-# if you use Zotero + Better BibTeX auto-export to meta/library.bib:
-python3 scripts/zotero_map.py --citekey <citekey>
 bash scripts/extract_fulltext.sh <citekey>
 
 # Ask the current session: 依照 meta/EXTRACTION-PROMPT.md 消化 <citekey>
