@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="610" viewBox="0 0 1200 610" role="img" aria-labelledby="title description">
-  <title id="title">Litwiki: from papers to cited answers</title>
-  <desc id="description">PDFs and metadata become page-marked text, linked notes and claims, and visible source health. For a real question, litwiki finds relevant material, checks the original page, and returns a citation or says the answer is not in the knowledge base.</desc>
+  <title id="title">Litwiki: one Markdown vault for Obsidian and AI agents</title>
+  <desc id="description">PDFs and metadata become page-marked text, linked notes and claims, and visible source health. Obsidian can browse and edit the Markdown vault; file-capable AI agents can ingest, maintain, verify, and answer from the same source-grounded files.</desc>
   <defs>
     <linearGradient id="canvas" x2="1" y2="1">
       <stop stop-color="#f7fbfe"/>
@@ -25,7 +25,7 @@
   <circle cx="72" cy="70" r="24" fill="#143f52"/>
   <path d="M61 64 L72 59 L83 64 L72 69 Z M61 70 L72 75 L83 70 M61 77 L72 82 L83 77" fill="none" stroke="#83e5d3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
   <text x="111" y="78" fill="#15394d" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="34" letter-spacing="-1">litwiki</text>
-  <text x="272" y="76" fill="#476273" font-family="Arial, Helvetica, sans-serif" font-size="20">From papers to cited answers.</text>
+  <text x="272" y="76" fill="#476273" font-family="Arial, Helvetica, sans-serif" font-size="20">One vault. Obsidian + AI agents.</text>
   <rect x="942" y="48" width="208" height="40" rx="20" fill="#ffffff" stroke="#c6dce3"/>
   <circle cx="964" cy="68" r="5" fill="#14a68f"/>
   <text x="980" y="74" fill="#315769" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="16">WORKFLOW ONLY</text>
@@ -33,7 +33,7 @@
   <rect x="34" y="116" width="1132" height="204" rx="23" fill="url(#source)" stroke="#c9e8e3" stroke-width="1.5"/>
   <rect x="51" y="134" width="11" height="11" rx="3" fill="#17a99b"/>
   <text x="71" y="146" fill="#24766f" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" letter-spacing="1.1">01  BUILD A TRACEABLE LIBRARY</text>
-  <text x="792" y="146" fill="#5c7c86" font-family="Arial, Helvetica, sans-serif" font-size="15">Your papers stay in your own vault</text>
+  <text x="792" y="146" fill="#5c7c86" font-family="Arial, Helvetica, sans-serif" font-size="15">Open in Obsidian; connect AI agents</text>
 
   <g fill="#ffffff" stroke="#cddfe3" stroke-width="1.5">
     <rect x="52" y="166" width="246" height="135" rx="16"/>
@@ -50,13 +50,14 @@
   <g fill="none" stroke="#18a89a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
     <path d="M79 191 h24 l7 7 v26 H79 Z M103 191 v8 h7 M85 210 h17 M85 216 h14"/>
     <path d="M362 191 h24 l7 7 v26 h-31 Z M367 208 h19 M367 215 h16"/>
-    <path d="M644 197 h17 l6 5 h17 v22 h-40 Z M650 210 h26 M650 216 h21"/>
+    <path d="M655 191 L668 188 L681 200 L679 216 L662 226 L649 213 Z" fill="#8a63cd" stroke="#6947ab"/>
+    <path d="M668 188 L663 207 L679 216 M649 213 L663 207" stroke="#d8c6f7"/>
     <path d="M927 202 l10 5 l10-5 l10 5 v12 l-10 5 l-10-5 l-10 5 Z M937 207 v12 M947 202 v17 M957 207 v12"/>
   </g>
   <g font-family="Arial, Helvetica, sans-serif" fill="#18384a">
     <text x="79" y="251" font-size="22" font-weight="700">Paper input</text>
     <text x="361" y="251" font-size="22" font-weight="700">Page extraction</text>
-    <text x="643" y="251" font-size="22" font-weight="700">Linked knowledge</text>
+    <text x="643" y="251" font-size="20" font-weight="700">Obsidian-ready vault</text>
     <text x="925" y="251" font-size="22" font-weight="700">Source health</text>
   </g>
   <g font-family="Arial, Helvetica, sans-serif" fill="#58727e" font-size="16">
@@ -73,8 +74,8 @@
 
   <rect x="34" y="339" width="1132" height="204" rx="23" fill="url(#answer)" stroke="#d4def3" stroke-width="1.5"/>
   <rect x="51" y="357" width="11" height="11" rx="3" fill="#5b83d6"/>
-  <text x="71" y="369" fill="#5270b4" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" letter-spacing="1.1">02  ANSWER A REAL QUESTION</text>
-  <text x="802" y="369" fill="#697b9e" font-family="Arial, Helvetica, sans-serif" font-size="15">Original pages are the authority</text>
+  <text x="71" y="369" fill="#5270b4" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" letter-spacing="1.1">02  MANAGE &amp; ANSWER WITH AI</text>
+  <text x="815" y="369" fill="#697b9e" font-family="Arial, Helvetica, sans-serif" font-size="15">Claude Code · Codex · Grok · more</text>
   <g fill="#ffffff" stroke="#d8dfed" stroke-width="1.5">
     <rect x="52" y="389" width="246" height="135" rx="16"/>
     <rect x="334" y="389" width="246" height="135" rx="16"/>
@@ -94,16 +95,16 @@
     <path d="M928 416 h23 v20 h-23 Z M933 425 l5 5 l9-10"/>
   </g>
   <g font-family="Arial, Helvetica, sans-serif" fill="#18384a">
-    <text x="79" y="474" font-size="22" font-weight="700">Ask</text>
+    <text x="79" y="474" font-size="22" font-weight="700">Task</text>
     <text x="361" y="474" font-size="22" font-weight="700">Find</text>
     <text x="643" y="474" font-size="22" font-weight="700">Verify</text>
-    <text x="925" y="474" font-size="22" font-weight="700">Answer</text>
+    <text x="925" y="474" font-size="22" font-weight="700">Write / answer</text>
   </g>
   <g font-family="Arial, Helvetica, sans-serif" fill="#64768f" font-size="16">
-    <text x="79" y="501">Your research question</text>
-    <text x="361" y="501">Search notes + claims</text>
-    <text x="643" y="501">Read source page + context</text>
-    <text x="925" y="501">Cite [[paperKey]] p.12</text>
+    <text x="79" y="501">Ingest, update or ask</text>
+    <text x="361" y="501">Search notes + sources</text>
+    <text x="643" y="501">Check page + source state</text>
+    <text x="925" y="501">Update notes or cite pages</text>
   </g>
   <g fill="none" stroke="#5b83d6" stroke-width="2.8" stroke-linecap="round" marker-end="url(#blue-arrow)">
     <path d="M303 456 H327"/>

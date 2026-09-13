@@ -1,6 +1,6 @@
 # litwiki
 
-[![Litwiki workflow: papers become page-marked text, linked notes and source-health records; real questions lead to checked source pages and cited answers.](docs/overview.svg)](docs/overview.svg)
+[![Litwiki overview: PDFs become page-marked text and an Obsidian-ready Markdown vault. File-capable AI agents manage the library and answer with source-page citations.](docs/overview.svg)](docs/overview.svg)
 
 A literature knowledge base that an AI can actually be held to.
 
@@ -11,6 +11,13 @@ does not contain the answer, the reply is exactly `Not in knowledge base.`
 This repository is the **workflow**: schemas, prompts, scripts, and an
 empty vault. It ships no papers. You clone it, point it at your own PDFs,
 and fill it.
+
+Open the plain-Markdown vault in **Obsidian** to browse and edit linked notes.
+To use AI for ingestion, upkeep, or questions, start **Claude Code, Codex,
+Grok, or another file-capable agent** in the vault and follow
+[AI-GUIDE](meta/AI-GUIDE.md) and [WORKFLOW](meta/WORKFLOW.md). They use the
+same notes, page citations, source checks, and validation rules; Obsidian
+and any particular AI are optional.
 
 ---
 
