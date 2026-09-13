@@ -17,9 +17,9 @@ echo "START $ck ($model)  $(date +%H:%M:%S)"
   --output-format json \
   -p "Digest paper $ck into this knowledge base. Follow meta/CODEX-TASK.md exactly, processing ONLY citekey $ck. Stop after step 7 of the per-paper procedure." \
   > "$ROOT/meta/codex-logs/$ck.json" 2>"$ROOT/meta/codex-logs/$ck.err"
-if [ -f "$ROOT/meta/digest-reports/$ck.json" ]; then
-  cost=$(python3 "$ROOT/scripts/_usage_line.py" "$ROOT/meta/codex-logs/$ck.json" 2>/dev/null)
-  echo "DONE  $ck  $(date +%H:%M:%S)  ${cost:-usage n/a}"
-else
-  echo "FAIL  $ck  $(date +%H:%M:%S)  (see meta/codex-logs/$ck.err)"
+rc=$?
+if [ "$rc" -ne 0 ]; then
+  echo "FAIL  $ck (agent exit $rc; see meta/codex-logs/)" >&2
+  exit "$rc"
 fi
+echo "DRAFT SESSION FINISHED  $ck (caller must inspect output, verify sources and apply; not integrated)"

@@ -13,8 +13,9 @@ echo "START $ck ($model)  $(date +%H:%M:%S)"
 codex exec --approve-for-me -C "$ROOT" -m "$model" \
   "Digest paper $ck into this knowledge base. Follow meta/CODEX-TASK.md exactly, processing ONLY citekey $ck. Stop after step 7 of the per-paper procedure. Do NOT open an xreview/ai-review round for this — the verification gate is the main session's job, not yours." \
   > "$ROOT/meta/codex-logs/$ck.log" 2>&1
-if [ -f "$ROOT/meta/digest-reports/$ck.json" ]; then
-  echo "DONE  $ck  $(date +%H:%M:%S)"
-else
-  echo "FAIL  $ck  $(date +%H:%M:%S)"
+rc=$?
+if [ "$rc" -ne 0 ]; then
+  echo "FAIL  $ck (agent exit $rc; see meta/codex-logs/)" >&2
+  exit "$rc"
 fi
+echo "DRAFT SESSION FINISHED  $ck (caller must inspect output, verify sources and apply; not integrated)"

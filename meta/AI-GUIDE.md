@@ -25,7 +25,9 @@ All paths below are relative to that directory.
 3. **Never invent page numbers.** If you found a fact in a `lit/` or
    `claims/` note, copy the page anchor written there. If you found it by
    grepping `fulltext/`, report the page marker nearest above the match
-   (fulltext files contain `[[p.N]]` markers).
+   (fulltext files contain `[[p.N]]` markers). Before citing, verify the actual
+   supporting passage, value, unit and scope in fulltext, even when a note or
+   cached answer matched. A stored status or page label is not verification.
 4. **Conflicts**: if two sources disagree, present BOTH with citations.
    Never silently pick one. Check `claims/` first — contested claims have
    `status: contested` and list both sides. `contested` means coexisting
@@ -76,7 +78,8 @@ grep -ril "<keyword>" claims/                                   # exact-term fal
 ```
 Claims are one fact per file with evidence quotes and page numbers —
 prefer them over everything else. Check the `status:` field:
-`supported` = safe to state; `contested` = present both sides;
+`supported` = recorded support, still verify the source before citing;
+`contested` = present both sides;
 `refuted` = state only as "refuted by ...".
 
 **Step 3b — per-sample numbers (`data/`).** For "what is sample X's age /
@@ -107,7 +110,8 @@ and read ONLY the matched pages (never the whole book). If the user confirms
 a fact you retrieved this way, save it as a claim (`clm-<citekey>-NN`) so
 the next lookup is free.
 
-**Step 5 — full text.** Only if steps 1–4 fail or you must verify a quote.
+**Step 5 — full text.** Use when earlier steps miss, and to verify every
+literature claim you will cite, including claims found in notes or cached QA.
 Search original pages with a separate BM25 index:
 ```
 python3 scripts/search.py --kind fulltext "<English keywords or sample ID>"
@@ -184,11 +188,13 @@ verified claim, and recommend adding a claim note.
 `## TL;DR` (中文) plus `## Key findings` is the summary. Do NOT re-summarize
 from fulltext when a lit note exists.
 
-## 3. Precedence when sources overlap
+## 3. Navigation order and source authority
 
-`qa/` (verified answers) > `claims/` > `lit/` notes > `fulltext/` raw text
-> anything else. `data/` sits below all of these: it is a locator for
-fulltext, never a citable source. Human-authored notes with `provenance: user` in the
+Use `qa/` → `claims/` → `lit/` to locate relevant evidence efficiently. This
+is navigation order, not an authority ranking: stored summaries and model
+reviews cannot override the original passage. Verify against `fulltext/`; when
+extraction or pagination is uncertain, check the original PDF and disclose any
+unresolved mismatch. `data/` is a locator for fulltext, never a citable source. Human-authored notes with `provenance: user` in the
 frontmatter represent the vault owner's own field knowledge — flag them as
 "(owner's note, not from literature)" when you use them.
 

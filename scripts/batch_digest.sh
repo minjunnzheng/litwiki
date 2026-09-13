@@ -4,11 +4,10 @@
 #   parallel = required positive concurrency limit
 #   runner   = required explicit runner selected for this task
 #
-# Already-digested papers (meta/digest-reports/<ck>.json exists) are skipped,
-# so the batch is resumable: re-run the same command after an interruption.
-# Digest agents only write lit/ + claims/, which is why parallel is safe
-# (see meta/CODEX-TASK.md). INTEGRATE (_catalog.md, concepts/, backlinks) is
-# NOT done here — run it once after the whole batch, per WORKFLOW §A-5.
+# The explicit worklist determines scope; old report files do not prove completion.
+# Digest agents draft per-paper replacements outside the vault (CODEX-TASK).
+# The caller verifies and applies them, then completes WORKFLOW §A-5 INTEGRATE.
+# Do not automatically retry the whole list; inspect outputs and select unfinished keys.
 set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 if [ "$#" -ne 3 ]; then
@@ -30,20 +29,24 @@ todo=()
 while read -r ck; do
   ck="${ck%%#*}"; ck="$(echo "$ck" | tr -d '[:space:]')"
   [ -z "$ck" ] && continue
-  [ -f "meta/digest-reports/$ck.json" ] && { echo "SKIP  $ck (already digested)"; continue; }
   [ -s "fulltext/$ck.txt" ] || { echo "SKIP  $ck (no/empty fulltext)"; continue; }
   todo+=("$ck")
 done < "$list"
 
 echo "== ${#todo[@]} papers to digest, $par at a time, runner=$(basename "$runner") =="
 echo "== started $(date '+%F %T') =="
+pids=()
 for ck in "${todo[@]}"; do
   while [ "$(jobs -rp | wc -l)" -ge "$par" ]; do sleep 5; done
   bash "$runner" "$ck" &
+  pids+=("$!")
   sleep 2
 done
-wait
-echo "== finished $(date '+%F %T') =="
+failed=0
+for pid in "${pids[@]}"; do
+  wait "$pid" || failed=1
+done
+echo "== agent batch exited (failures=$failed; caller verification/apply still required) $(date '+%F %T') =="
 
 python3 - "$ROOT" <<'EOF'
 import json, os, glob, sys
@@ -64,3 +67,4 @@ for f in glob.glob(os.path.join(root, "meta/codex-logs/*.json")):
         pass
 print(f"== usage over {n} runs: total_tokens={tot:,}  output_tokens={out:,}  cost=${cost:.2f} ==")
 EOF
+exit "$failed"

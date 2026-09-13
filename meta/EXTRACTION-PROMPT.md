@@ -12,18 +12,20 @@ description: The exact prompt given to a strong AI to digest one paper into lit 
 ---
 
 You are digesting one scientific paper into a structured knowledge base so
-that a much weaker AI can later answer questions about it *without reading
-the paper*. Whatever you do not write down is lost — extract accordingly.
+that another AI can efficiently locate its evidence. Notes are navigation aids;
+later answers still verify the original passage under `meta/AI-GUIDE.md`.
+All paths below are relative to the vault root; prepare replacement files in
+session scratch outside the vault, as required by `meta/TRANSACTIONS.md`.
 
 **Inputs**
 - citekey: `{{citekey}}`
 - metadata (from library.bib): `{{title / authors / year / journal / doi}}`
-- full text: `litwiki/fulltext/{{citekey}}.txt` (contains `[[p.N]]` page markers)
+- full text: `fulltext/{{citekey}}.txt` (contains `[[p.N]]` page markers)
 - PDF (for figures, only if needed): `{{pdf_path}}`
 - Zotero annotations (may be empty): `{{annotations}}`
-- schema: read `litwiki/meta/SCHEMA.md` and follow it exactly
-- allowed tags: `litwiki/meta/VOCAB.md`
-- owner priorities: read `litwiki/meta/INSTRUCTIONS.md`. If the paper falls
+- schema: read `meta/SCHEMA.md` and follow it exactly
+- allowed tags: `meta/VOCAB.md`
+- owner priorities: read `meta/INSTRUCTIONS.md`. If the paper falls
   under a 焦點主題, extract DENSER: aim for the upper end of the findings
   (12) and claims (10) ranges, and make the Parameters table exhaustive.
   The 「抽取時永遠優先」 items there apply to every paper regardless of topic.
@@ -32,7 +34,7 @@ the paper*. Whatever you do not write down is lost — extract accordingly.
 
 1. Read the ENTIRE fulltext. Do not stop at the abstract.
 
-2. Write `litwiki/lit/{{citekey}}.md` following the `lit` schema exactly:
+2. Write `lit/{{citekey}}.md` following the `lit` schema exactly:
    - TL;DR：中文 3–5 句。
    - Key findings: 5–12 numbered findings. Each one sentence, each with a
      page anchor. Include the *quantitative* result, not just the direction
@@ -47,15 +49,18 @@ the paper*. Whatever you do not write down is lost — extract accordingly.
    - Relevance: link other citekeys from `_catalog.md` that this paper
      extends, contradicts, or uses. Only link papers actually in the catalog.
 
-3. Extract 3–10 **claims** into `litwiki/claims/` (schema `claim`):
+3. Extract 3–10 **claims** into `claims/` (schema `claim`):
    - Atomic: one falsifiable statement each, numbers verbatim, with a ≤40-word
      supporting quote and page.
    - Choose the claims a researcher would want to *cite or check*: headline
      results, key parameter values, disputed interpretations.
    - File/id naming: `clm-{{citekey}}-01`, `clm-{{citekey}}-02`, ... —
      scoped to this paper, so parallel ingestion never collides.
-   - If a new claim contradicts an existing one in `claims/`, set both to
-     `status: contested` and cross-list in `counter_sources`.
+   - If a new claim appears incompatible with an existing claim, report both
+     IDs, source passages, methods and scope in `problems`. Do not edit the
+     other paper during this per-paper task. The calling session checks whether
+     the results genuinely compete and, if appropriate, cross-lists them in
+     one reviewed transaction; a different viewpoint is not automatically wrong.
 
 4. Return (as your final output) a JSON object:
    ```json
@@ -79,4 +84,9 @@ the paper*. Whatever you do not write down is lost — extract accordingly.
   silently.
 - If the fulltext is corrupt/truncated, extract what you can and report it
   in `problems`.
-- Write nothing outside `lit/` and `claims/`.
+- Per-paper content targets are `lit/` and `claims/`; CODEX-TASK may additionally
+  request a digest report. Draft all replacements outside the vault. Do not
+  directly write canonical files or apply unreviewed scientific content. Hand
+  draft paths and source checks to the calling session for independent
+  verification and transaction apply, including `meta/log.md`, under WORKFLOW.
+  Drafting a digest does not establish integration completion.

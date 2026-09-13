@@ -33,6 +33,17 @@ exactly the citekey named in the prompt.
    before stopping. Broken-link warnings to papers not yet ingested are
    expected; ignore those.
 
+## Write boundary
+
+The paths in steps 4 and 6 are logical targets. Draft complete replacements
+outside the vault; do not directly write them or apply unreviewed scientific
+content. Return the draft paths and source checks to the calling session, which
+performs independent verification, includes the log and source record, and
+uses `meta/TRANSACTIONS.md` to apply the reviewed changes. Step 7 validates
+applied work; if verification/apply has not occurred, report "drafted, not
+applied" and leave final validation to the caller. A report file existing on
+disk does not prove a successful current run or integration completion.
+
 ## Hard rules
 
 - Every number verbatim from the fulltext — never estimate or recall from

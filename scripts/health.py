@@ -104,10 +104,28 @@ def audit(root, versions=None, integrations=None):
     catalog_path = root / "_catalog.md"
     catalog = catalog_path.read_text() if catalog_path.exists() else ""
     catalog_keys = set(re.findall(r"^\|\s*\[\[([^\]|]+)\]\]", catalog, re.M))
+    tracked_pdf_hashes = {r["pdf"]["sha256"] for r in versions.values()
+                          if r.get("pdf") and r["pdf"].get("sha256")}
+    pdf_hashes = {r["pdf"]["path"]: r["pdf"]["sha256"] for r in current.values()
+                  if r.get("pdf") and r["pdf"].get("sha256")}
     papers = []
     for key, (path, fm, links, body) in notes.items():
         if path.parent.name != "lit":
             continue
+        note_pdf = {"state": "not-linked", "path": None, "sha256": None}
+        pdf = fm.get("pdf")
+        if isinstance(pdf, str) and pdf.strip():
+            file = Path(pdf).expanduser()
+            file = (file if file.is_absolute() else root / file).resolve()
+            note_pdf["path"] = str(file)
+            if not file.is_file():
+                note_pdf["state"] = "missing"
+            else:
+                if str(file) not in pdf_hashes:
+                    pdf_hashes[str(file)] = digest(file)
+                note_pdf["sha256"] = pdf_hashes[str(file)]
+                note_pdf["state"] = ("tracked" if note_pdf["sha256"] in tracked_pdf_hashes
+                                     else "untracked")
         receipt = integrations.get(key, {})
         missing = sorted(link for link in links if link.startswith("clm-") and link not in notes)
         mocs = sorted(name for name, (p, _, targets, _) in notes.items()
@@ -144,14 +162,16 @@ def audit(root, versions=None, integrations=None):
         papers.append({"citekey": key, "digest_status": fm.get("status"),
                        "integration_status": state, "flags": flags, "mocs": mocs,
                        "missing_claims": missing, "reciprocal_links_to_review": reciprocal_missing,
-                       "record": receipt or None})
+                       "record": receipt or None, "note_pdf": note_pdf})
     return {"generated_at": now(), "vault": str(root.resolve()),
             "source_counts": dict(Counter(s["state"] for s in sources)),
             "integration_counts": dict(Counter(p["integration_status"] for p in papers)),
+            "note_pdf_counts": dict(Counter(p["note_pdf"]["state"] for p in papers)),
             "sources": sources, "papers": papers,
             "limitations": "An observed baseline does not identify the source version used by an old digest. "
                             "Unrecorded means no structured completion receipt; link flags require review, "
-                            "not automatic edits. Hash equality is not scientific verification."}
+                            "not automatic edits. Note PDF hashes check file tracking, not paper/page identity. "
+                            "Hash equality is not scientific verification."}
 
 
 def self_test():
@@ -177,6 +197,22 @@ def self_test():
         result = audit(root, baseline, receipt)
         assert result["source_counts"] == {"changed": 1}
         assert result["papers"][0]["integration_status"] == "stale-receipt"
+        # A note-only PDF change must remain visible even when all mapped sources match.
+        baseline = capture(root)
+        pdf = root / "attachment.pdf"
+        note.write_text("---\ntype: lit\ncitekey: demo\nstatus: digested\npdf: attachment.pdf\n---\n")
+        assert audit(root, baseline)["note_pdf_counts"] == {"missing": 1}
+        pdf.write_bytes(b"synthetic PDF bytes")
+        assert audit(root, baseline)["note_pdf_counts"] == {"untracked": 1}
+        baseline["demo"]["pdf"] = {"path": str(pdf.resolve()), "sha256": digest(pdf)}
+        (root / "meta/map.json").write_text(json.dumps({"demo": {"pdf": str(pdf)}}))
+        assert audit(root, baseline)["note_pdf_counts"] == {"tracked": 1}
+        alternate = root / "alternate.pdf"
+        alternate.write_bytes(b"different synthetic PDF bytes")
+        note.write_text(note.read_text().replace("pdf: attachment.pdf", "pdf: alternate.pdf"))
+        result = audit(root, baseline)
+        assert result["source_counts"] == {"unchanged": 1}
+        assert result["note_pdf_counts"] == {"untracked": 1}
         source.rename(root / "moved.txt")
         assert audit(root, baseline)["source_counts"] == {"missing": 1}
         try:
@@ -224,9 +260,13 @@ def main():
         else:
             print("sources:", result["source_counts"])
             print("integration:", result["integration_counts"])
+            print("note PDFs:", result["note_pdf_counts"])
             for paper in result["papers"]:
                 if paper["integration_status"] in ("pending", "stale-receipt"):
                     print(paper["integration_status"], paper["citekey"], ", ".join(paper["flags"]))
+            for paper in result["papers"]:
+                if paper["note_pdf"]["state"] in ("missing", "untracked"):
+                    print("note-pdf-" + paper["note_pdf"]["state"], paper["citekey"], paper["note_pdf"]["path"])
             print(result["limitations"])
         return 0
     except (OSError, ValueError, TypeError, KeyError) as exc:

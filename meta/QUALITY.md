@@ -35,6 +35,14 @@ are file identities, not automatically citable aliases. A first baseline records
 the files observed today; it cannot reconstruct which version an old digest used.
 An unavailable/unmapped PDF is reported separately from the fulltext hash.
 
+The status command also checks each lit note's `pdf:` path. `tracked` means
+the current file bytes occur in the PDF snapshots; it does not prove paper
+identity or page equivalence. `untracked` means the file exists but its bytes
+are absent from those snapshots; `missing` means the declared path is broken;
+`not-linked` means the note has no PDF path. Resolve these against the actual
+attachment and source before changing a note or baseline. Source counts alone
+do not cover PDFs reached only through note links.
+
 Before reading a new or changed source, capture it to a new file outside the vault:
 
 ```bash
