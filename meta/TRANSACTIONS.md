@@ -40,11 +40,11 @@ then writes a small JSON spec:
   "writes": [
     {
       "path": "_catalog.md",
-      "content_file": "/private/tmp/litwiki-example/catalog.md"
+      "content_file": "/tmp/litwiki-example/catalog.md"
     },
     {
       "path": "mocs/moc-example.md",
-      "content_file": "/private/tmp/litwiki-example/moc-example.md"
+      "content_file": "/tmp/litwiki-example/moc-example.md"
     }
   ]
 }
@@ -195,10 +195,10 @@ exact changed paths. Journals remain available for audit and recovery.
 ## Operator commands
 
 ```bash
-python3 scripts/transaction.py prepare /private/tmp/<operation>/spec.json \
-  --bundle /private/tmp/<operation>/bundle.json
-python3 scripts/transaction.py inspect /private/tmp/<operation>/bundle.json
-python3 scripts/transaction.py apply /private/tmp/<operation>/bundle.json \
+python3 scripts/transaction.py prepare /tmp/<operation>/spec.json \
+  --bundle /tmp/<operation>/bundle.json
+python3 scripts/transaction.py inspect /tmp/<operation>/bundle.json
+python3 scripts/transaction.py apply /tmp/<operation>/bundle.json \
   --approved-plan-sha256 <inspect-hash>
 
 python3 scripts/transaction.py status <operation_id>

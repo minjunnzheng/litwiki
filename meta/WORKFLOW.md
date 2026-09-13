@@ -40,10 +40,10 @@ description: Standard operating procedures — adding a new paper, caching verif
       Spec 格式與安全契約見 `meta/TRANSACTIONS.md`。正式 vault 不可逐檔直接改。
    7. Preview、一次套用、驗證：
       ```bash
-      python3 scripts/transaction.py prepare /private/tmp/<operation>/spec.json \
-        --bundle /private/tmp/<operation>/bundle.json
-      python3 scripts/transaction.py inspect /private/tmp/<operation>/bundle.json
-      python3 scripts/transaction.py apply /private/tmp/<operation>/bundle.json \
+      python3 scripts/transaction.py prepare /tmp/<operation>/spec.json \
+        --bundle /tmp/<operation>/bundle.json
+      python3 scripts/transaction.py inspect /tmp/<operation>/bundle.json
+      python3 scripts/transaction.py apply /tmp/<operation>/bundle.json \
         --approved-plan-sha256 <inspect 輸出的 hash>
       python3 scripts/validate.py
       ```
