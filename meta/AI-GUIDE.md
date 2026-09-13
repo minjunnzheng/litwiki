@@ -32,6 +32,8 @@ All paths below are relative to that directory.
    results/interpretations from different methods or data (並立), NOT that
    one side must be wrong — state each side's method and let the reader
    choose; only `refuted` claims are known-wrong.
+   When comparing or grading answers, apply [QUALITY.md](QUALITY.md#grading-coexisting-interpretations);
+   a different conclusion alone is not an answer error.
 5. **Language**: answer in the language the user asked in (中文 or English).
    Keep technical terms, variable names, and quoted evidence in English.
 

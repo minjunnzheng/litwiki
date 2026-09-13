@@ -128,5 +128,44 @@ wrong-unit, missing-condition, conflicting-source and absent-answer cases in the
 review set. Split development cases from held-out cases before tuning retrieval;
 do not report this small regression set as a general research benchmark.
 
+### Grading coexisting interpretations
+
+`expected_answer` is a reviewed reference, not the only acceptable conclusion or
+wording. Grade whether an answer faithfully represents the evidence and answers
+the question within its stated scope. Apply this rubric to human grading and AI
+review commentary; AI commentary still does not count as a human score.
+
+- A transcription, unit, citation or attribution error is correctable. Report
+  citation-location errors separately from the scientific interpretation.
+- Different regions, periods, definitions, methods or assumptions can explain
+  different results. State those conditions; do not force a contradiction.
+- Competing interpretations of the same question may remain unresolved. Present
+  each relevant position with its source, evidence, assumptions and limitations.
+  A justified preference is allowed if its basis is explicit and alternatives
+  are represented fairly. Preserving alternatives does not require equal weight.
+- Model agreement, a majority vote, publication recency or a difference from the
+  reference answer alone cannot establish that another interpretation is wrong.
+  Do not set a claim to `refuted` without an explicit, source-grounded reason.
+
+For `checks`, `accuracy` means faithful attribution and evidence-supported
+statements, including honest uncertainty; it does not require settling the
+scientific debate. `conditions` checks applicable scope and assumptions.
+`conflicts` checks fair presentation of relevant competing positions and the
+limits of any preference, not convergence to one answer. An unresolved debate
+can pass these checks. If the reviewer cannot assess a required check, leave the
+review pending; `null` means irrelevant, not uncertain.
+
+Before grading, record the question's scope, required perspectives and applicable
+criteria in the case's `review_notes`; these are bound by `case_sha256`. Review
+changes before approving the case again. A paper-specific question need not
+survey every competing paper; a cross-literature comparison must not omit a
+relevant alternative merely because the reference favours another position.
+
+Source/location recall measures overlap with the chosen reference evidence,
+not scientific correctness or exhaustive coverage. If an answer brings valid
+additional evidence, verify it and reconsider the reference; do not penalise the
+answer solely for that difference. Recheck affected cases when new literature is
+integrated, even when previously cited files have not changed.
+
 `examples/demo/` contains synthetic teaching material. `scripts/demo.py` exercises
 the pipeline and simulated approvals in temporary storage, not real human gold.
