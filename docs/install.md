@@ -59,6 +59,14 @@ Replace `paperkey` and the placeholders, then run
 `fulltext/paperkey.txt` and `lit/paperkey.md`. Do not run `zotero_map.py`
 after adding manual entries: it rebuilds `meta/map.json` from the Zotero export.
 
+The map entry and extraction are bootstrap steps: they run directly in the vault,
+before the source baseline and digestion (`meta/WORKFLOW.md` §A). Do not log
+them separately. Record them once, in the `INGEST` line of `meta/log.md` that goes
+into the final ingest transaction together with the note, catalog row, source
+version and integration receipt — for example
+`INGEST paperkey: manual map.json entry, fulltext extracted, lit + N claims`.
+If extraction fails (nonzero exit), stop; nothing is logged.
+
 ## Agent skills
 
 ```bash

@@ -135,6 +135,13 @@ def main():
         sys.exit(f"ERROR: {BIB} not found. Set up the Better BibTeX "
                  "auto-export first (see docs/install.md).")
     entries = parse_bib(BIB)
+    # refuse before touching meta/map.json
+    if not entries:
+        sys.exit(f"ERROR: {BIB} has no BibTeX entries (empty or comment-only "
+                 "export); meta/map.json not changed.")
+    if args.citekey is not None and args.citekey not in entries:
+        sys.exit(f"ERROR: citekey '{args.citekey}' not in {BIB}; "
+                 "meta/map.json not changed.")
     zot = load_zotero()
     mapping, missing_pdf = {}, []
     for key, f in sorted(entries.items()):
@@ -177,7 +184,7 @@ def main():
         print("_catalog.md exists — not overwritten")
 
     if args.citekey is not None:
-        print(json.dumps(mapping.get(args.citekey, "NOT FOUND"),
+        print(json.dumps(mapping[args.citekey],
                          ensure_ascii=False, indent=2))
 
 

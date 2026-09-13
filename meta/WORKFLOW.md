@@ -15,7 +15,7 @@ description: Standard operating procedures — adding a new paper, caching verif
 3. 在終端機（litwiki/ 目錄下），Zotero 路線先跑
    `python3 scripts/zotero_map.py --citekey <新citekey>`；手動路線略過此指令。
    兩者接著都跑 `bash scripts/extract_fulltext.sh <新citekey>`，產生
-   `fulltext/<citekey>.txt`。
+   `fulltext/<citekey>.txt`。任一指令非零結束時停止，先修正再繼續。
 4. **由目前 session 消化；只有使用者當次明確指定，才委派其他模型。**
    不得把一次指定當成固定分工。依 `meta/EXTRACTION-PROMPT.md` 與
    `meta/SCHEMA.md` 執行；指定 Grok 或 Codex 時，可使用對應的
@@ -25,7 +25,9 @@ description: Standard operating procedures — adding a new paper, caching verif
    外部 agent 的規格見 `meta/AGENT-TASK.md`，驗證責任仍在呼叫端。
 5. **INTEGRATE 回寫**（消化完成後，由主 session 依消化回傳的 JSON 執行；
    這步讓既有頁面「知道」新論文存在，缺了它庫會單向生長）：
-   1. `_catalog.md` 加一行（表頭論文數 +1）。
+   1. `_catalog.md` 加一行（表頭論文數 +1）。citekey 欄必須是 `[[citekey]]`，
+      否則 `validate.py` 視為缺列：
+      `| [[<citekey>]] | <year> | <first author> | <title> | <topics> | <one-liner> |`
    2. `concept_candidates` 併入 `concepts/`；新論文有提供數值的既有 concept，
       把值補進其 Typical values 表（附 [[citekey]] 或 claim 連結）。
    3. 加進相關 `mocs/`（一句話導讀）。

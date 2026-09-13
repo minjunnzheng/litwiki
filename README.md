@@ -64,6 +64,8 @@ to your shell profile (for example, `~/.zshrc`).
 
 ```bash
 bash scripts/extract_fulltext.sh <citekey>
+# Source baseline: after extraction, before digestion (meta/QUALITY.md)
+python3 -B scripts/health.py baseline --citekey <citekey> --output /tmp/<operation>/source-versions.json
 
 # Ask the current session: 依照 meta/EXTRACTION-PROMPT.md 消化 <citekey>
 # Select an external runner only if you explicitly delegate this task.
@@ -73,7 +75,8 @@ bash scripts/extract_fulltext.sh <citekey>
 5. INTEGRATE the new paper into `_catalog.md`, `concepts/`, `mocs/`, and
    backlinks — WORKFLOW §A-5. Multi-file writes go through
    `scripts/transaction.py` (preview, then apply). See `meta/TRANSACTIONS.md`.
-6. Record the source version and integration checks per `meta/QUALITY.md`.
+6. Include that captured source version and the integration checks in the same
+   transaction, per `meta/QUALITY.md`; after digesting, confirm the source hash is unchanged.
    `digested` is not `integrated`. Run `health.py status` and `validate.py`.
 
 ## Source drift, pending integration and content checks

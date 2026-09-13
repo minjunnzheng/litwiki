@@ -98,6 +98,8 @@ def main():
 
     claim_ids = {}
     lit_claim_links = {}   # citekey -> set of claim ids linked in its lit note
+    lit_names = {os.path.splitext(os.path.basename(f))[0]
+                 for f, (t, _, _) in fm_all.items() if t == "lit"}
 
     for f, (t, fm, text) in fm_all.items():
         name = os.path.splitext(os.path.basename(f))[0]
@@ -117,6 +119,26 @@ def main():
             ft = os.path.join(ROOT, "fulltext", name + ".txt")
             if fm.get("status") != "stub" and not os.path.exists(ft):
                 warn(f, "no fulltext file")
+            if os.path.exists(ft):
+                # Page anchors for this paper only: `[[<own citekey>]] p.N`, or a
+                # bare p.N on a line with no other paper citation.
+                have = set(re.findall(r"\[\[p\.(\d+)\]\]", open(ft).read()))
+                body = text[text.find("\n---", 3) + 4:]
+                link = r"\[\[([^\]|#]+)(?:[|#][^\]]*)?\]\]"   # [[target|alias]]
+                for line in body.splitlines():
+                    others = {t.strip() for t in re.findall(link, line)
+                              if not re.fullmatch(r"p\.\d+", t.strip())} - {name}
+                    other_papers = {t for t in others
+                                    if t in lit_names or t not in notes}
+                    for m in re.finditer(r"(" + link + r"\s*)?(?<![A-Za-z])"
+                                         r"pp?\.(\d+)(?:[-–](\d+))?", line):
+                        if m.group(2) and m.group(2).strip() in other_papers:
+                            continue
+                        if not m.group(2) and other_papers:
+                            continue
+                        for p in filter(None, (m.group(3), m.group(4))):
+                            if p not in have:
+                                err(f, f"cites p.{p} but fulltext has no [[p.{p}]] marker")
             if fm.get("status") == "reference":
                 for sec in ("## TL;DR", "## Chapter map"):
                     if sec not in text:
@@ -153,7 +175,7 @@ def main():
                     have = set(re.findall(r"\[\[p\.(\d+)\]\]", open(ft).read()))
                     for p in pages:
                         if str(p) not in have:
-                            warn(f, f"p.{p} beyond fulltext markers of {ck}")
+                            err(f, f"p.{p} beyond fulltext markers of {ck}")
             if fm.get("status") == "contested" and "## Counter-evidence\nnone" in text:
                 warn(f, "contested claim but Counter-evidence is 'none'")
         elif t == "concept":
